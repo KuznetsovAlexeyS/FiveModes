@@ -42,7 +42,7 @@ namespace MapOfModes
 		{
 			firstThread = new Thread(() =>
 			{
-				var tempSys = new ExplicitRungeKutta(100, 0.05, 67.85, 0, 0.962, 980, 999); // tStart -- время, начиная с которого мы берём данные.
+				var tempSys = new ExplicitRungeKutta(100, 0.0, 500, 0, 0.962, 0, 50); // tStart -- время, начиная с которого мы берём данные.
 				//Расчёт для значений 0-tStart всё равно пройдёт.
 				var step = 0;
 				try
