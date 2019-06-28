@@ -26,7 +26,7 @@ namespace MapOfModes
 			};
 			chart = new ZedGraphControl()
 			{
-				Dock = DockStyle.Fill, // говорим графику заполнить всё окно
+				Dock = DockStyle.Fill, // говорим графику заполнить всё окно.
 			};
 			chart.GraphPane.Title.Text = "Карта режимов";
 			chart.GraphPane.XAxis.Title.Text = "t";
