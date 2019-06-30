@@ -1,6 +1,5 @@
 using System;
 using DotNumerics.ODE;
-using ZedGraph;
 
 namespace MapOfModes
 
@@ -18,8 +17,9 @@ namespace MapOfModes
 		private double d;
 		private int tStart;
 		private int tEnd;
+		private int iterationsInOneSecond;
 
-		public ExplicitRungeKutta(double Pr, double nu, double e, double r, double k, int tStart, int tEnd)
+		public ExplicitRungeKutta(double Pr, double nu, double e, double r, double k, int tStart, int tEnd, int iterationsInOneSecond)
 		{
 			this.Pr = Pr;
 			this.nu = nu;
@@ -33,6 +33,7 @@ namespace MapOfModes
 			//с последующим чтением или создайте несколько массивов.
 			this.tStart = tStart;
 			this.tEnd = tEnd;
+			this.iterationsInOneSecond = iterationsInOneSecond;
 		}
 
 		public double[] Solve(int numberOfCountedMod)
@@ -45,12 +46,13 @@ namespace MapOfModes
 			y0[3] = 3.0;
 			y0[4] = 3.0;
 			this.odeRK.InitializeODEs(fun, 5);
-			double[,] sol = odeRK.Solve(y0, 0, 0.001, tEnd); // 0.001 -- шаг, tEnd -- время, до которого считаем.
-			double[] mod = new double [sol.GetLength(0) - tStart*1000];
+			double[,] sol = odeRK.Solve(y0, 0, 1.0/iterationsInOneSecond, tEnd); // iterationsInOneSeconds -- величина, обратная шагу.
+			// tEnd -- время, до которого считаем.
+			double[] mod = new double [sol.GetLength(0) - tStart* iterationsInOneSecond]; // Отсекаем всё до момента времени tStart.
 			int amountOfPoints = sol.GetLength(0);
-			for(int i=tStart*1000; i<amountOfPoints; i++) // tStart умножаем на 1000, так как время в секундах, а запись в массив велась с шагом в 1 мс.
+			for(int i=tStart* iterationsInOneSecond; i<amountOfPoints; i++)
 			{
-				mod[i - tStart*1000] = sol[i, numberOfCountedMod]; //Если захотите изменить шаг, то не забудьте поправить и эту строку.
+				mod[i - tStart*iterationsInOneSecond] = sol[i, numberOfCountedMod];
 			}
 			return mod;
 		}

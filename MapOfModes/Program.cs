@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using ZedGraph;
@@ -11,11 +11,13 @@ namespace MapOfModes
 	{
 		private readonly Form form;
 		private readonly ZedGraphControl chart;
+		private volatile bool canceled;
+		private volatile bool paused;
 		private readonly PointPairList countedPoints;
 		private Thread firstThread;
-		private Thread secondThread;
-		private Thread thirdThread;
-		private Thread fourthThread;
+		//private Thread secondThread;
+		//private Thread thirdThread;
+		//private Thread fourthThread;
 
 		public Program()
 		{
@@ -28,13 +30,15 @@ namespace MapOfModes
 			{
 				Dock = DockStyle.Fill, // говорим графику заполнить всё окно.
 			};
-			chart.GraphPane.Title.Text = "Карта режимов";
-			chart.GraphPane.XAxis.Title.Text = "t";
-			chart.GraphPane.YAxis.Title.Text = "X";
+			chart.GraphPane.Title.Text = "Фурье-разложение";
+			chart.GraphPane.XAxis.Title.Text = "Частота";
+			chart.GraphPane.YAxis.Title.Text = "Амплитда";
 			countedPoints = new PointPairList();
 			var original = chart.GraphPane.AddCurve("value", countedPoints, Color.Blue, SymbolType.None);
 			original.Line.IsVisible = true;
 			form.Controls.Add(chart);
+			chart.KeyDown += (sender, args) => paused = !paused;
+			form.FormClosing += (sender, args) => { canceled = true; };
 			form.Shown += OnShown;
 		}
 
@@ -42,15 +46,17 @@ namespace MapOfModes
 		{
 			firstThread = new Thread(() =>
 			{
-				var tempSys = new ExplicitRungeKutta(100, 0.0, 500, 0, 0.962, 0, 50); // tStart -- время, начиная с которого мы берём данные.
+				var tempSys = new ExplicitRungeKutta(100, 0.05, 67.81, 0, 0.962, 470, 1000, 1000); // tStart -- время, начиная с которого мы берём данные.
 				//Расчёт для значений 0-tStart всё равно пройдёт.
+				//Если берёте разницу между tStart и tEnd больше 530 или меняете количество итераций в секунде, не забудьте изменить nPoints в FFT для корректной работы.
 				var step = 0;
 				try
 				{
-					foreach(var point in tempSys.Solve(1)) // Аргумент в Solve для моды X -- 1, Y -- 2, Z -- 3, V -- 4, W -- 5. 
+				foreach (var point in FFT.GetFFT(tempSys.Solve(1)).Take(3000).ToArray()) // Аргумент в Solve для моды X -- 1, Y -- 2, Z -- 3, V -- 4, W -- 5. 
 					{
+						if (canceled) return;
 						var j = step;
-						var invokation = form.BeginInvoke((Action)(() => AddPoint(new DataPoint { X = j, Y = point })));
+						var invokation = form.BeginInvoke((Action)(() => AddPoint(new DataPoint { X = j / 524.288, Y = point })));
 						step++;
 					}
 				}
