@@ -46,7 +46,7 @@ namespace MapOfModes
 		{
 			firstThread = new Thread(() =>
 			{
-				var tempSys = new ExplicitRungeKutta(100, 0.05, 67.81, 0, 0.962, 470, 1000, 1000); // tStart -- время, начиная с которого мы берём данные.
+				var tempSys = new ExplicitRungeKutta(100, 0.075, 69.3, 0, 0.962, 470, 1000, 1000); // tStart -- время, начиная с которого мы берём данные.
 				//Расчёт для значений 0-tStart всё равно пройдёт.
 				//Если берёте разницу между tStart и tEnd больше 530 или меняете количество итераций в секунде, не забудьте изменить nPoints в FFT для корректной работы.
 				var step = 0;
