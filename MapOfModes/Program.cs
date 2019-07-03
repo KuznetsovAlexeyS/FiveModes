@@ -30,9 +30,9 @@ namespace MapOfModes
 			{
 				Dock = DockStyle.Fill, // говорим графику заполнить всё окно.
 			};
-			chart.GraphPane.Title.Text = "Фурье-разложение";
-			chart.GraphPane.XAxis.Title.Text = "Частота";
-			chart.GraphPane.YAxis.Title.Text = "Амплитда";
+			chart.GraphPane.Title.Text = "";
+			chart.GraphPane.XAxis.Title.Text = "t";
+			chart.GraphPane.YAxis.Title.Text = "X";
 			countedPoints = new PointPairList();
 			var original = chart.GraphPane.AddCurve("value", countedPoints, Color.Blue, SymbolType.None);
 			original.Line.IsVisible = true;
@@ -46,13 +46,13 @@ namespace MapOfModes
 		{
 			firstThread = new Thread(() =>
 			{
-				var tempSys = new ExplicitRungeKutta(100, 0.075, 69.3, 0, 0.962, 470, 1000, 1000); // tStart -- время, начиная с которого мы берём данные.
+				var tempSys = new ExplicitRungeKutta(100, 0.05, 69.24, 0, 0.962, 470, 1000, 1000); // tStart -- время, начиная с которого мы берём данные.
 				//Расчёт для значений 0-tStart всё равно пройдёт.
 				//Если берёте разницу между tStart и tEnd больше 530 или меняете количество итераций в секунде, не забудьте изменить nPoints в FFT для корректной работы.
 				var step = 0;
 				try
 				{
-				foreach (var point in FFT.GetFFT(tempSys.Solve(1)).Take(3000).ToArray()) // Аргумент в Solve для моды X -- 1, Y -- 2, Z -- 3, V -- 4, W -- 5. 
+				foreach (var point in (tempSys.Solve(1)).Take(15000).ToArray()) // Аргумент в Solve для моды X -- 1, Y -- 2, Z -- 3, V -- 4, W -- 5. 
 					{
 						if (canceled) return;
 						var j = step;

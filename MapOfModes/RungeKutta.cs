@@ -2,7 +2,6 @@ using System;
 using DotNumerics.ODE;
 
 namespace MapOfModes
-
 {
 	public partial class ExplicitRungeKutta
 	{
@@ -40,15 +39,15 @@ namespace MapOfModes
 		{
 			OdeFunction fun = new OdeFunction(ODEs);
 			double[] y0 = new double[5];
-			y0[0] = 3.0; // Начальные условия
-			y0[1] = 3.0;
-			y0[2] = 3.0;
-			y0[3] = 3.0;
-			y0[4] = 3.0;
+			y0[0] = 0.0; // Начальные условия
+			y0[1] = 0.5;
+			y0[2] = 0.0;
+			y0[3] = 0.0;
+			y0[4] = 0.0;
 			this.odeRK.InitializeODEs(fun, 5);
 			double[,] sol = odeRK.Solve(y0, 0, 1.0/iterationsInOneSecond, tEnd); // iterationsInOneSeconds -- величина, обратная шагу.
 			// tEnd -- время, до которого считаем.
-			double[] mod = new double [sol.GetLength(0) - tStart* iterationsInOneSecond]; // Отсекаем всё до момента времени tStart.
+			double[] mod = new double [sol.GetLength(0) - tStart * iterationsInOneSecond]; // Отсекаем всё до момента времени tStart.
 			int amountOfPoints = sol.GetLength(0);
 			for(int i=tStart* iterationsInOneSecond; i<amountOfPoints; i++)
 			{

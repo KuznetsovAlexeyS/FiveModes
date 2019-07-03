@@ -26,6 +26,7 @@ namespace MapOfModes
 
 			double[] result = resultComplex
 				.Select(x => Math.Abs(x.Real))
+				.Take(nPoints / 2)
 				.ToArray();
 
 			return result;
