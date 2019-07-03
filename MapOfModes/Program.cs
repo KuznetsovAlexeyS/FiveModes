@@ -19,8 +19,8 @@ namespace MapOfModes
 		private readonly PointPairList somethingUnknownCountedPoints;
 		private Thread firstThread;
 		private Thread secondThread;
-		//private Thread thirdThread;
-		//private Thread fourthThread;
+		private Thread thirdThread;
+		private Thread fourthThread;
 
 		public Program()
 		{
@@ -40,11 +40,11 @@ namespace MapOfModes
 			quasiPeriodicCountedPoints = new PointPairList();
 			chaosCountedPoints = new PointPairList();
 			somethingUnknownCountedPoints = new PointPairList();
-			var fading = chart.GraphPane.AddCurve("Затухание", fadingCountedPoints, Color.Green, SymbolType.Diamond);
+			var fading = chart.GraphPane.AddCurve("Затухание", fadingCountedPoints, Color.Green, SymbolType.Diamond);// 
 			var quasiPeriodic = chart.GraphPane.AddCurve("Квазипериодический режим", quasiPeriodicCountedPoints, Color.Blue, SymbolType.Triangle);
 			var chaos = chart.GraphPane.AddCurve("Хаос", chaosCountedPoints, Color.Red, SymbolType.Star);
 			var somethingUnknown = chart.GraphPane.AddCurve("Неизвестный режим", somethingUnknownCountedPoints, Color.Gray, SymbolType.XCross);
-			fading.Line.IsVisible = false;
+			fading.Line.IsVisible = false;//
 			quasiPeriodic.Line.IsVisible = false;
 			chaos.Line.IsVisible = false;
 			somethingUnknown.Line.IsVisible = false;
@@ -69,7 +69,6 @@ namespace MapOfModes
 							var info = new ExplicitRungeKutta(100, 0.05 + nuStep, 67.5 + eStep, 0, 0.962, 470, 1000, 1000);
 							var mode = ModeGetter.GetMode(info.Solve(1));
 							var invokation = form.BeginInvoke((Action)(() => AddPoint(new DataPoint { X = info.nu, Y = info.e }, mode)));
-							nuStep += 0.001;
 						}
 					}
 				}
@@ -91,7 +90,48 @@ namespace MapOfModes
 							var info = new ExplicitRungeKutta(100, 0.05 + nuStep, 70.0 + eStep, 0, 0.962, 470, 1000, 1000);
 							var mode = ModeGetter.GetMode(info.Solve(1));
 							var invokation = form.BeginInvoke((Action)(() => AddPoint(new DataPoint { X = info.nu, Y = info.e }, mode)));
-							nuStep += 0.001;
+						}
+					}
+				}
+
+				catch
+				{
+					throw new Exception();
+				}
+			});
+
+			thirdThread = new Thread(() =>
+			{
+				try
+				{
+					for (double eStep = 0; eStep < 2.5; eStep += 0.05)
+					{
+						for (double nuStep = 0.0; nuStep < 0.01; nuStep += 0.001)
+						{
+							var info = new ExplicitRungeKutta(100, 0.05 + nuStep, 72.5 + eStep, 0, 0.962, 470, 1000, 1000);
+							var mode = ModeGetter.GetMode(info.Solve(1));
+							var invokation = form.BeginInvoke((Action)(() => AddPoint(new DataPoint { X = info.nu, Y = info.e }, mode)));
+						}
+					}
+				}
+
+				catch
+				{
+					throw new Exception();
+				}
+			});
+
+			fourthThread = new Thread(() =>
+			{
+				try
+				{
+					for (double eStep = 0; eStep < 2.5; eStep += 0.05)
+					{
+						for (double nuStep = 0.0; nuStep < 0.01; nuStep += 0.001)
+						{
+							var info = new ExplicitRungeKutta(100, 0.05 + nuStep, 75.0 + eStep, 0, 0.962, 470, 1000, 1000);
+							var mode = ModeGetter.GetMode(info.Solve(1));
+							var invokation = form.BeginInvoke((Action)(() => AddPoint(new DataPoint { X = info.nu, Y = info.e }, mode)));
 						}
 					}
 				}
@@ -104,6 +144,8 @@ namespace MapOfModes
 
 			firstThread.Start();
 			secondThread.Start();
+			thirdThread.Start();
+			fourthThread.Start();
 		}
 
 		static void Main()
