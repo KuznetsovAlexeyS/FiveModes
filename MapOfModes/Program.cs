@@ -13,9 +13,12 @@ namespace MapOfModes
 		private readonly ZedGraphControl chart;
 		private volatile bool canceled;
 		private volatile bool paused;
-		private readonly PointPairList countedPoints;
+		private readonly PointPairList fadingCountedPoints;
+		private readonly PointPairList quasiPeriodicCountedPoints;
+		private readonly PointPairList chaosCountedPoints;
+		private readonly PointPairList somethingUnknownCountedPoints;
 		private Thread firstThread;
-		//private Thread secondThread;
+		private Thread secondThread;
 		//private Thread thirdThread;
 		//private Thread fourthThread;
 
@@ -31,11 +34,22 @@ namespace MapOfModes
 				Dock = DockStyle.Fill, // говорим графику заполнить всё окно.
 			};
 			chart.GraphPane.Title.Text = "";
-			chart.GraphPane.XAxis.Title.Text = "t";
-			chart.GraphPane.YAxis.Title.Text = "X";
-			countedPoints = new PointPairList();
-			var original = chart.GraphPane.AddCurve("value", countedPoints, Color.Blue, SymbolType.None);
-			original.Line.IsVisible = true;
+			chart.GraphPane.XAxis.Title.Text = "nu";
+			chart.GraphPane.YAxis.Title.Text = "e";
+			fadingCountedPoints = new PointPairList();
+			quasiPeriodicCountedPoints = new PointPairList();
+			chaosCountedPoints = new PointPairList();
+			somethingUnknownCountedPoints = new PointPairList();
+			var fading = chart.GraphPane.AddCurve("Затухание", fadingCountedPoints, Color.Green, SymbolType.Diamond);
+			var quasiPeriodic = chart.GraphPane.AddCurve("Квазипериодический режим", quasiPeriodicCountedPoints, Color.Blue, SymbolType.Triangle);
+			var chaos = chart.GraphPane.AddCurve("Хаос", chaosCountedPoints, Color.Red, SymbolType.Star);
+			var somethingUnknown = chart.GraphPane.AddCurve("Неизвестный режим", somethingUnknownCountedPoints, Color.Gray, SymbolType.XCross);
+			fading.Line.IsVisible = false;
+			quasiPeriodic.Line.IsVisible = false;
+			chaos.Line.IsVisible = false;
+			somethingUnknown.Line.IsVisible = false;
+			chart.GraphPane.XAxis.MajorGrid.IsVisible = true;
+			chart.GraphPane.YAxis.MajorGrid.IsVisible = true;
 			form.Controls.Add(chart);
 			chart.KeyDown += (sender, args) => paused = !paused;
 			form.FormClosing += (sender, args) => { canceled = true; };
@@ -46,45 +60,50 @@ namespace MapOfModes
 		{
 			firstThread = new Thread(() =>
 			{
-				var tempSys = new ExplicitRungeKutta(100, 0.05, 69.24, 0, 0.962, 470, 1000, 1000); // tStart -- время, начиная с которого мы берём данные.
-				//Расчёт для значений 0-tStart всё равно пройдёт.
-				//Если берёте разницу между tStart и tEnd больше 530 или меняете количество итераций в секунде, не забудьте изменить nPoints в FFT для корректной работы.
-				var step = 0;
 				try
 				{
-				foreach (var point in (tempSys.Solve(1)).Take(15000).ToArray()) // Аргумент в Solve для моды X -- 1, Y -- 2, Z -- 3, V -- 4, W -- 5. 
+					for (double eStep = 0; eStep < 2.5; eStep += 0.05)
 					{
-						if (canceled) return;
-						var j = step;
-						var invokation = form.BeginInvoke((Action)(() => AddPoint(new DataPoint { X = j / 524.288, Y = point })));
-						step++;
+						for (double nuStep = 0.0; nuStep < 0.01; nuStep += 0.001)
+						{
+							var info = new ExplicitRungeKutta(100, 0.05 + nuStep, 67.5 + eStep, 0, 0.962, 470, 1000, 1000);
+							var mode = ModeGetter.GetMode(info.Solve(1));
+							var invokation = form.BeginInvoke((Action)(() => AddPoint(new DataPoint { X = info.nu, Y = info.e }, mode)));
+							nuStep += 0.001;
+						}
 					}
 				}
+
 				catch
 				{
 					throw new Exception();
 				}
 			});
 
-			/*secondThread = new Thread(() =>
+			secondThread = new Thread(() =>
 			{
 				try
 				{
-					foreach (var point in Tester.Test(new Random(), -100, -80, -10, 10)) // Сделать Рунге-Кутту
+					for (double eStep = 0; eStep < 2.5; eStep += 0.05)
 					{
-						var invokation = form.BeginInvoke((Action)(() => AddPoint(point)));
-						Thread.Sleep(300);
+						for (double nuStep = 0.0; nuStep < 0.01; nuStep += 0.001)
+						{
+							var info = new ExplicitRungeKutta(100, 0.05 + nuStep, 70.0 + eStep, 0, 0.962, 470, 1000, 1000);
+							var mode = ModeGetter.GetMode(info.Solve(1));
+							var invokation = form.BeginInvoke((Action)(() => AddPoint(new DataPoint { X = info.nu, Y = info.e }, mode)));
+							nuStep += 0.001;
+						}
 					}
 				}
+
 				catch
 				{
-					// Если это убрать, то будет ошибка при закрытии формы. 
-					//Если хочется -- можно добавить сюда что-нибудь, связанное с эксепшенами.
+					throw new Exception();
 				}
-			});*/
+			});
 
 			firstThread.Start();
-			//secondThread.Start();
+			secondThread.Start();
 		}
 
 		static void Main()
@@ -97,9 +116,23 @@ namespace MapOfModes
 			Application.Run(form);
 		}
 
-		private void AddPoint(DataPoint p)
+		private void AddPoint(DataPoint p, Mode mode)
 		{
-			countedPoints.Add(p.X, p.Y);
+			switch (mode)
+			{
+				case Mode.Fading:
+					fadingCountedPoints.Add(p.X, p.Y);
+					break;
+				case Mode.QuasiPeriodic:
+					quasiPeriodicCountedPoints.Add(p.X, p.Y);
+					break;
+				case Mode.Chaos:
+					chaosCountedPoints.Add(p.X, p.Y);
+					break;
+				case Mode.SomethingUnknown:
+					somethingUnknownCountedPoints.Add(p.X, p.Y);
+					break;
+			}
 			chart.AxisChange();
 			chart.Invalidate();
 			chart.Refresh();

@@ -7,10 +7,10 @@ namespace MapOfModes
 	{
 		private OdeExplicitRungeKutta45 odeRK = new OdeExplicitRungeKutta45();
 
-		private double Pr; // число Прантдля
-		private double nu; // частота электрического поля
-		private double e; // электрическое число Рэлея
-		private double r; // тепловое число Рэлея
+		public double Pr { get; } // число Прантдля
+		public double nu { get; } // частота электрического поля
+		public double e { get; } // электрическое число Рэлея
+		public double r { get; } // тепловое число Рэлея
 		private double k; // волновое число
 		private double b;
 		private double d;
