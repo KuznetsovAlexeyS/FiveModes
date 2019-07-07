@@ -11,16 +11,14 @@ namespace MapOfModes
 	{
 		private readonly Form form;
 		private readonly ZedGraphControl chart;
-		private volatile bool canceled;
+		private volatile bool canceled = false;
 		private volatile bool paused;
-		private readonly PointPairList fadingCountedPoints;
-		private readonly PointPairList quasiPeriodicCountedPoints;
-		private readonly PointPairList chaosCountedPoints;
-		private readonly PointPairList somethingUnknownCountedPoints;
+		private PointPairList fadingCountedPoints;
+		private PointPairList quasiPeriodicCountedPoints;
+		private PointPairList chaosCountedPoints;
+		private PointPairList somethingUnknownCountedPoints;
 		private Thread firstThread;
 		private Thread secondThread;
-		private Thread thirdThread;
-		private Thread fourthThread;
 
 		public Program()
 		{
@@ -33,9 +31,9 @@ namespace MapOfModes
 			{
 				Dock = DockStyle.Fill, // говорим графику заполнить всё окно.
 			};
-			chart.GraphPane.Title.Text = "";
-			chart.GraphPane.XAxis.Title.Text = "nu";
-			chart.GraphPane.YAxis.Title.Text = "e";
+			chart.GraphPane.Title.Text = "...";
+			chart.GraphPane.XAxis.Title.Text = "..."; // НЕ ЗАБЫТЬ СДЕЛАТЬ ТАК, ЧТОБЫ ОНИ МЕНЯЛИСЬ ПРИ ИЗМЕНЕНИИ ПАРАМЕТРОВ ВЫЗОВА GoThroughValuesAndGetMode
+			chart.GraphPane.YAxis.Title.Text = "...";
 			fadingCountedPoints = new PointPairList();
 			quasiPeriodicCountedPoints = new PointPairList();
 			chaosCountedPoints = new PointPairList();
@@ -58,18 +56,14 @@ namespace MapOfModes
 
 		private void OnShown(object sender, EventArgs e)
 		{
-			firstThread = new Thread(() =>
+			firstThread = new Thread(() => // ПЕРВЫЙ ТРЕД. ДОБАВИТЬ ОТДЕЛЬНЫЙ КЛАСС, ВОЗВРАЩАЮЩИЙ ЧЕРЕЗ YIELD RETURN ЗНАЧЕНИЯ ModelCheck
 			{
 				try
 				{
-					for (double eStep = 0; eStep < 2.5; eStep += 0.05)
+					var system = new ODESystem(100, 0.05, 67.0, 0, 0.962, 470, 1000, 1000);
+					foreach(var point in ModeGetter.GoThroughValuesAndGetMode(system, 0.045, 0.0005, 0.050, 67.0, 0.05, 70, 470, 1000, 1000, Parameter.nu, Parameter.e, Mode.X))
 					{
-						for (double nuStep = 0.0; nuStep < 0.01; nuStep += 0.001)
-						{
-							var info = new ExplicitRungeKutta(100, 0.05 + nuStep, 67.5 + eStep, 0, 0.962, 470, 1000, 1000);
-							var mode = ModeGetter.GetMode(info.Solve(1));
-							var invokation = form.BeginInvoke((Action)(() => AddPoint(new DataPoint { X = info.nu, Y = info.e }, mode)));
-						}
+						var invokation = form.BeginInvoke((Action)(() => AddPoint(new DataPoint { X = point.HorizontalAxis, Y = point.VerticalAxis }, point.Regime)));
 					}
 				}
 
@@ -79,60 +73,14 @@ namespace MapOfModes
 				}
 			});
 
-			secondThread = new Thread(() =>
+			secondThread = new Thread(() => // ВТОРОЙ ТРЕД
 			{
 				try
 				{
-					for (double eStep = 0; eStep < 2.5; eStep += 0.05)
+					var system = new ODESystem(100, 0.05, 67.0, 0, 0.962, 470, 1000, 1000);
+					foreach (var point in ModeGetter.GoThroughValuesAndGetMode(system, 0.050, 0.0005, 0.055, 67.0, 0.05, 70, 470, 1000, 1000, Parameter.nu, Parameter.e, Mode.X))
 					{
-						for (double nuStep = 0.0; nuStep < 0.01; nuStep += 0.001)
-						{
-							var info = new ExplicitRungeKutta(100, 0.05 + nuStep, 70.0 + eStep, 0, 0.962, 470, 1000, 1000);
-							var mode = ModeGetter.GetMode(info.Solve(1));
-							var invokation = form.BeginInvoke((Action)(() => AddPoint(new DataPoint { X = info.nu, Y = info.e }, mode)));
-						}
-					}
-				}
-
-				catch
-				{
-					throw new Exception();
-				}
-			});
-
-			thirdThread = new Thread(() =>
-			{
-				try
-				{
-					for (double eStep = 0; eStep < 2.5; eStep += 0.05)
-					{
-						for (double nuStep = 0.0; nuStep < 0.01; nuStep += 0.001)
-						{
-							var info = new ExplicitRungeKutta(100, 0.05 + nuStep, 72.5 + eStep, 0, 0.962, 470, 1000, 1000);
-							var mode = ModeGetter.GetMode(info.Solve(1));
-							var invokation = form.BeginInvoke((Action)(() => AddPoint(new DataPoint { X = info.nu, Y = info.e }, mode)));
-						}
-					}
-				}
-
-				catch
-				{
-					throw new Exception();
-				}
-			});
-
-			fourthThread = new Thread(() =>
-			{
-				try
-				{
-					for (double eStep = 0; eStep < 2.5; eStep += 0.05)
-					{
-						for (double nuStep = 0.0; nuStep < 0.01; nuStep += 0.001)
-						{
-							var info = new ExplicitRungeKutta(100, 0.05 + nuStep, 75.0 + eStep, 0, 0.962, 470, 1000, 1000);
-							var mode = ModeGetter.GetMode(info.Solve(1));
-							var invokation = form.BeginInvoke((Action)(() => AddPoint(new DataPoint { X = info.nu, Y = info.e }, mode)));
-						}
+						var invokation = form.BeginInvoke((Action)(() => AddPoint(new DataPoint { X = point.HorizontalAxis, Y = point.VerticalAxis }, point.Regime)));
 					}
 				}
 
@@ -144,8 +92,6 @@ namespace MapOfModes
 
 			firstThread.Start();
 			secondThread.Start();
-			thirdThread.Start();
-			fourthThread.Start();
 		}
 
 		static void Main()
@@ -158,20 +104,20 @@ namespace MapOfModes
 			Application.Run(form);
 		}
 
-		private void AddPoint(DataPoint p, Mode mode)
+		private void AddPoint(DataPoint p, Regime mode)
 		{
 			switch (mode)
 			{
-				case Mode.Fading:
+				case Regime.Fading:
 					fadingCountedPoints.Add(p.X, p.Y);
 					break;
-				case Mode.QuasiPeriodic:
+				case Regime.QuasiPeriodic:
 					quasiPeriodicCountedPoints.Add(p.X, p.Y);
 					break;
-				case Mode.Chaos:
+				case Regime.Chaos:
 					chaosCountedPoints.Add(p.X, p.Y);
 					break;
-				case Mode.SomethingUnknown:
+				case Regime.SomethingUnknown:
 					somethingUnknownCountedPoints.Add(p.X, p.Y);
 					break;
 			}

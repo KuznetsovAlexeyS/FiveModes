@@ -3,7 +3,7 @@ using DotNumerics.ODE;
 
 namespace MapOfModes
 {
-	public partial class ExplicitRungeKutta
+	public partial class ODESystem
 	{
 		private OdeExplicitRungeKutta45 odeRK = new OdeExplicitRungeKutta45();
 
@@ -11,14 +11,14 @@ namespace MapOfModes
 		public double nu { get; } // частота электрического поля
 		public double e { get; } // электрическое число Рэлея
 		public double r { get; } // тепловое число Рэлея
-		private double k; // волновое число
+		public double k { get; } // волновое число
 		private double b;
 		private double d;
 		private int tStart;
 		private int tEnd;
 		private int iterationsInOneSecond;
 
-		public ExplicitRungeKutta(double Pr, double nu, double e, double r, double k, int tStart, int tEnd, int iterationsInOneSecond)
+		public ODESystem(double Pr, double nu, double e, double r, double k, int tStart, int tEnd, int iterationsInOneSecond)
 		{
 			this.Pr = Pr;
 			this.nu = nu;
