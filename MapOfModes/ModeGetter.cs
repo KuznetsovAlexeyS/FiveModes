@@ -39,6 +39,26 @@ namespace MapOfModes
 
 			for (double horizontalValue = horizontalValueStart; horizontalValue < horizontalValueEnd; horizontalValue += horizontalValueStep)
 			{
+
+				switch (horizontalParameter)
+				{
+					case Parameter.Pr:
+						Pr = horizontalValue;
+						break;
+					case Parameter.r:
+						r = horizontalValue;
+						break;
+					case Parameter.e:
+						e = horizontalValue;
+						break;
+					case Parameter.nu:
+						nu = horizontalValue;
+						break;
+					case Parameter.k:
+						k = horizontalValue;
+						break;
+				}
+
 				for (double verticalValue = verticalValueStart; verticalValue < verticalValueEnd; verticalValue += verticalValueStep)
 				{
 					switch (verticalParameter)
@@ -79,25 +99,6 @@ namespace MapOfModes
 							yield return new ModeInSpace(GetMode(sys.Solve(5)), horizontalValue, verticalValue);
 							break;
 					}
-				}
-
-				switch (horizontalParameter)
-				{
-					case Parameter.Pr:
-						Pr = horizontalValue;
-						break;
-					case Parameter.r:
-						r = horizontalValue;
-						break;
-					case Parameter.e:
-						e = horizontalValue;
-						break;
-					case Parameter.nu:
-						nu = horizontalValue;
-						break;
-					case Parameter.k:
-						k = horizontalValue;
-						break;
 				}
 			}
 		}
