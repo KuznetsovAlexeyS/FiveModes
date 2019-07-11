@@ -8,11 +8,11 @@ namespace MapOfModes
 {
 	class SettingForm : Form
 	{
-		public ComboBox mode { set; get; }
-		public ComboBox horizontalValue { set; get; }
-		public ComboBox verticalValue { set; get; }
+		public ComboBox mode { get; }
+		public ComboBox horizontalValue { get; }
+		public ComboBox verticalValue { get; }
 		private Button cancel;
-		public Button accept { set; get; }
+		public Button accept { get; }
 		public TextBox PrStart { get; }
 		public TextBox eStart { get; }
 		public TextBox rStart { get; }
@@ -20,11 +20,17 @@ namespace MapOfModes
 		public TextBox kStart { get; } 
 		public TextBox horizontalValueEnd { get; }
 		public TextBox verticalValueEnd { get; }
+		public TextBox startModeX { get; }
+		public TextBox startModeY { get; }
+		public TextBox startModeZ { get; }
+		public TextBox startModeV { get; }
+		public TextBox startModeW { get; }
+		public CheckBox continuationByMode { get; }
 
 		public SettingForm()
 		{
 			this.Text = "Настройки";
-			this.Width = 300;
+			this.Width = 400;
 			this.Height = 300;
 			this.ControlBox = false;
 			this.FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -151,33 +157,101 @@ namespace MapOfModes
 
 			Label finalNumbers = new Label
 			{
-				Location = new Point(205, 78),
+				Location = new Point(190, 78),
 				Text = "Конечное значение",
 			};
 
 			this.horizontalValueEnd = new TextBox
 			{
-				Location = new Point(210, 120),
+				Location = new Point(195, 120),
 				Size = new Size(50, 10),
 			};
 			Label horizontalValueEndLabel = new Label
 			{
-				Location = new Point(205, 105),
+				Location = new Point(190, 105),
 				Text = "по горизонтали:",
 			};
 
 			this.verticalValueEnd = new TextBox
 			{
-				Location = new Point(210, 155),
+				Location = new Point(195, 155),
 				Size = new Size(50, 10),
 			};
 			Label verticalValueEndLabel = new Label
 			{
-				Location = new Point(205, 140),
+				Location = new Point(190, 140),
 				Text = "по вертикали:",
 			};
 
+			Label startModes = new Label
+			{
+				Location = new Point(293, 45),
+				Size = new Size(80, 30),
+				Text = "Cтартовые значения мод",
+			};
 
+			this.startModeX = new TextBox
+			{
+				Location = new Point(310, 80),
+				Size = new Size(50, 10),
+			};
+			Label startModeXLabel = new Label
+			{
+				Location = new Point(293, 83),
+				Text = "X:",
+			};
+
+			this.startModeY = new TextBox
+			{
+				Location = new Point(310, 105),
+				Size = new Size(50, 10),
+			};
+			Label startModeYLabel = new Label
+			{
+				Location = new Point(293, 108),
+				Text = "Y:",
+			};
+
+			this.startModeZ = new TextBox
+			{
+				Location = new Point(310, 130),
+				Size = new Size(50, 10),
+			};
+			Label startModeZLabel = new Label
+			{
+				Location = new Point(293, 133),
+				Text = "Z:",
+			};
+
+			this.startModeV = new TextBox
+			{
+				Location = new Point(310, 155),
+				Size = new Size(50, 10),
+			};
+			Label startModeVLabel = new Label
+			{
+				Location = new Point(293, 158),
+				Text = "V:",
+			};
+
+			this.startModeW = new TextBox
+			{
+				Location = new Point(310, 180),
+				Size = new Size(50, 10),
+			};
+			Label startModeWLabel = new Label
+			{
+				Location = new Point(293, 183),
+				Size = new Size(20, 20),
+				Text = "W:",
+			};
+
+			this.continuationByMode = new CheckBox
+			{
+				Location = new Point (280, 210),
+				Size = new Size(100, 40),
+				Text = "Продолжение по параметру",
+			};
 
 			mode.Items.AddRange(new string[] { "X", "Y", "Z", "V", "W" });
 			horizontalValue.Items.AddRange(new string[] { "Pr", "nu", "e", "r", "k" });
@@ -206,6 +280,18 @@ namespace MapOfModes
 			Controls.Add(horizontalValueEndLabel);
 			Controls.Add(verticalValueEnd);
 			Controls.Add(verticalValueEndLabel);
+			Controls.Add(startModes);
+			Controls.Add(startModeX);
+			Controls.Add(startModeXLabel);
+			Controls.Add(startModeY);
+			Controls.Add(startModeYLabel);
+			Controls.Add(startModeZ);
+			Controls.Add(startModeZLabel);
+			Controls.Add(startModeV);
+			Controls.Add(startModeVLabel);
+			Controls.Add(startModeW);
+			Controls.Add(startModeWLabel);
+			Controls.Add(continuationByMode);
 		}
 	}
 }

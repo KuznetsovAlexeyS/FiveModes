@@ -49,10 +49,17 @@ namespace MapOfModes
 			// tEnd -- время, до которого считаем.
 			double[] mod = new double [sol.GetLength(0) - tStart * iterationsInOneSecond]; // Отсекаем всё до момента времени tStart.
 			int amountOfPoints = sol.GetLength(0);
-			for(int i=tStart* iterationsInOneSecond; i<amountOfPoints; i++)
+			for(int i=tStart * iterationsInOneSecond; i < amountOfPoints; i++)
 			{
 				mod[i - tStart*iterationsInOneSecond] = sol[i, numberOfCountedMod];
 			}
+			//if (ContinuationByMode) {
+			GlobalModes.X = sol[amountOfPoints - 1, 1];
+			GlobalModes.Y = sol[amountOfPoints - 1, 2];
+			GlobalModes.Z = sol[amountOfPoints - 1, 3];
+			GlobalModes.V = sol[amountOfPoints - 1, 4];
+			GlobalModes.W = sol[amountOfPoints - 1, 5];
+			// }
 			return mod;
 		}
 

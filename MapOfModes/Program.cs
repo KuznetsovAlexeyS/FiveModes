@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
@@ -12,7 +13,9 @@ namespace MapOfModes
 		private readonly CustomForm mainForm;
 		private readonly SettingForm settingForm;
 		private readonly ZedGraphControl chart;
-		private volatile bool paused;
+		private readonly ClosingWarningForm warningForm;
+		private volatile bool paused = false;
+		private volatile bool canceled = false;
 		private PointPairList fadingCountedPoints;
 		private PointPairList quasiPeriodicCountedPoints;
 		private PointPairList chaosCountedPoints;
@@ -52,20 +55,27 @@ namespace MapOfModes
 
 			chart.GraphPane.XAxis.MajorGrid.IsVisible = true;
 			chart.GraphPane.YAxis.MajorGrid.IsVisible = true;
+
 			mainForm.Controls.Add(chart);
+
 			mainForm.pause.Click += (sender, args) => paused = !paused;
-			mainForm.Shown += OnShown;
+			mainForm.Shown += OnShown;//
+
 			settingForm = new SettingForm { };
 			mainForm.openSettings.Click += (sender, args) => settingForm.Show();
-			/*mainForm.FormClosing += (sender, args) =>
+			FormClosingEventHandler warning = (sender, args) =>
 			{
-				settingForm.Close();
+				paused = true;
+				var res = MessageBox.Show("Расчёт ещё идёт, действительно закрыть приложение?", "Предупреждение", MessageBoxButtons.YesNo);
+				if (res == DialogResult.Yes)
+				{
+					args.Cancel = false;
+					canceled = true;
+				}
+				else args.Cancel = true;
+				paused = false;
 			};
-			mainForm.FormClosed += (sender, args) =>
-			{
-				Application.Exit(); // Добавить окно, спрашивающее хочет ли пользователь закрывать прогу, 
-				//чтобы тред успел досчитать и не выкинул ошибку
-			};*/
+			mainForm.FormClosing += warning;
 		}
 
 		private void OnShown(object sender, EventArgs e)
@@ -79,6 +89,7 @@ namespace MapOfModes
 					{
 						var invokation = mainForm.BeginInvoke((Action)(() => AddPoint(new DataPoint { X = point.HorizontalAxis, Y = point.VerticalAxis }, point.Regime)));
 						while (paused) Thread.Sleep(20);
+						if (canceled) return;
 					}
 				}
 
