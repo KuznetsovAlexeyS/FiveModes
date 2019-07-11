@@ -63,9 +63,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClosingWarningForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="CustomForm.cs">
       <SubType>Form</SubType>
     </Compile>

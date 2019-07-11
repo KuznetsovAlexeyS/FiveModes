@@ -13,9 +13,9 @@ namespace MapOfModes
 		private readonly CustomForm mainForm;
 		private readonly SettingForm settingForm;
 		private readonly ZedGraphControl chart;
-		private readonly ClosingWarningForm warningForm;
 		private volatile bool paused = false;
 		private volatile bool canceled = false;
+		private volatile bool countingsAreGoing = false;
 		private PointPairList fadingCountedPoints;
 		private PointPairList quasiPeriodicCountedPoints;
 		private PointPairList chaosCountedPoints;
@@ -58,7 +58,11 @@ namespace MapOfModes
 
 			mainForm.Controls.Add(chart);
 
-			mainForm.pause.Click += (sender, args) => paused = !paused;
+			mainForm.pause.Click += (sender, args) =>
+			{
+				paused = !paused;
+				countingsAreGoing = !countingsAreGoing;
+			};
 			mainForm.Shown += OnShown;//
 
 			settingForm = new SettingForm { };
@@ -66,14 +70,17 @@ namespace MapOfModes
 			FormClosingEventHandler warning = (sender, args) =>
 			{
 				paused = true;
-				var res = MessageBox.Show("Расчёт ещё идёт, действительно закрыть приложение?", "Предупреждение", MessageBoxButtons.YesNo);
-				if (res == DialogResult.Yes)
+				if (countingsAreGoing)
 				{
-					args.Cancel = false;
-					canceled = true;
+					var res = MessageBox.Show("Расчёт ещё идёт, действительно закрыть приложение?", "Предупреждение", MessageBoxButtons.YesNo);
+					if (res == DialogResult.Yes)
+					{
+						args.Cancel = false;
+						canceled = true;
+					}
+					else args.Cancel = true;
+					paused = false;
 				}
-				else args.Cancel = true;
-				paused = false;
 			};
 			mainForm.FormClosing += warning;
 		}
@@ -84,6 +91,7 @@ namespace MapOfModes
 			{
 				try
 				{
+					countingsAreGoing = true;
 					var system = new ODESystem(100, 0.05, 67.0, 0.0, 0.962, 470, 1000, 1000);
 					foreach(var point in ModeGetter.GoThroughValuesAndGetMode(system, 0.05, 0.005, 0.051, 67.0, 0.1, 70.0, 470, 1000, 1000, Parameter.nu, Parameter.e, Mode.X))
 					{
@@ -91,6 +99,7 @@ namespace MapOfModes
 						while (paused) Thread.Sleep(20);
 						if (canceled) return;
 					}
+					countingsAreGoing = false;
 				}
 
 				catch
