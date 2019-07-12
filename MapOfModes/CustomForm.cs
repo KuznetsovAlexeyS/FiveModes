@@ -22,7 +22,7 @@ namespace MapOfModes
 
 			this.openSettings = new ToolStripMenuItem
 			{
-				Text = "Опции"
+				Text = "Настройки"
 			};
 
 			this.pause = new ToolStripMenuItem
