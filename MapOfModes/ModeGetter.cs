@@ -5,10 +5,6 @@ using System.Linq;
 
 namespace MapOfModes
 {
-	enum Regime { Chaos, QuasiPeriodic, Fading, SomethingUnknown };
-	enum Parameter { Pr, e, r, nu, k };
-	enum Mode { X, Y, Z, V, W };
-
 	class ModeInSpace
 	{
 		public Regime Regime { get; }

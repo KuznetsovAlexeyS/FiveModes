@@ -15,7 +15,8 @@ namespace MapOfModes
 		private readonly ZedGraphControl chart;
 		private volatile bool paused = false;
 		private volatile bool canceled = false;
-		private volatile bool countingsAreGoing = false;
+		private volatile bool countingStarted = false;
+		private volatile bool dataIsCorrect = true;
 		private PointPairList fadingCountedPoints;
 		private PointPairList quasiPeriodicCountedPoints;
 		private PointPairList chaosCountedPoints;
@@ -61,50 +62,80 @@ namespace MapOfModes
 			mainForm.pause.Click += (sender, args) =>
 			{
 				paused = !paused;
-				countingsAreGoing = !countingsAreGoing;
 			};
-			mainForm.Shown += OnShown;//
-
+		
 			settingForm = new SettingForm { };
 			mainForm.openSettings.Click += (sender, args) => settingForm.Show();
+			settingForm.accept.Click += OnAcception;
+			settingForm.accept.Click += (sender, args) => 
+			{
+				if (dataIsCorrect)
+					settingForm.Hide();
+			};
 			FormClosingEventHandler warning = (sender, args) =>
 			{
+				bool tempPaused = false;
+				if (paused == true) tempPaused = true;
 				paused = true;
-				if (countingsAreGoing)
+				var res = MessageBox.Show("Карта не сохранена, действительно закрыть приложение?", "Предупреждение", MessageBoxButtons.YesNo);
+				if (res == DialogResult.Yes)
 				{
-					var res = MessageBox.Show("Расчёт ещё идёт, действительно закрыть приложение?", "Предупреждение", MessageBoxButtons.YesNo);
-					if (res == DialogResult.Yes)
-					{
-						args.Cancel = false;
-						canceled = true;
-					}
-					else args.Cancel = true;
-					paused = false;
+					args.Cancel = false;
+					canceled = true;
 				}
+				else args.Cancel = true;
+				paused = tempPaused;
 			};
 			mainForm.FormClosing += warning;
 		}
 
-		private void OnShown(object sender, EventArgs e)
+		private void OnAcception(object sender, EventArgs e)
 		{
+			ParserToDouble Pr = new ParserToDouble(settingForm.PrStart.Text);
+			ParserToDouble el = new ParserToDouble(settingForm.eStart.Text);
+			ParserToDouble r = new ParserToDouble(settingForm.rStart.Text);
+			ParserToDouble nu = new ParserToDouble(settingForm.nuStart.Text);
+			ParserToDouble k = new ParserToDouble(settingForm.kStart.Text);
+			ParserToDouble startX = new ParserToDouble(settingForm.startModeX.Text);
+			ParserToDouble startY = new ParserToDouble(settingForm.startModeY.Text);
+			ParserToDouble startZ = new ParserToDouble(settingForm.startModeZ.Text);
+			ParserToDouble startV = new ParserToDouble(settingForm.startModeV.Text);
+			ParserToDouble startW = new ParserToDouble(settingForm.startModeW.Text);
+			ParserToDouble horizontalValueEnd = new ParserToDouble(settingForm.horizontalValueEnd.Text);
+			ParserToDouble verticalValueEnd = new ParserToDouble(settingForm.verticalValueEnd.Text);
+			if (!Pr.IsDataCorrect || !el.IsDataCorrect || !r.IsDataCorrect || !nu.IsDataCorrect || !k.IsDataCorrect
+				|| !startX.IsDataCorrect || !startY.IsDataCorrect || !startZ.IsDataCorrect || !startV.IsDataCorrect || !startW.IsDataCorrect
+				|| !horizontalValueEnd.IsDataCorrect || !verticalValueEnd.IsDataCorrect)
+			{
+				dataIsCorrect = false;
+				MessageBox.Show("Введённые данные некорректны");
+				return;
+			}
+			else dataIsCorrect = true;
+
+			var horizontalParameter = ParserToEnums.ParseToParameter(settingForm.horizontalValue.SelectedItem.ToString());
+			var verticalParameter = ParserToEnums.ParseToParameter(settingForm.verticalValue.SelectedItem.ToString());
+			var mode = ParserToEnums.ParseToMode(settingForm.mode.SelectedItem.ToString());
+			var CBMV = settingForm.continuationByMode.Checked;
+
 			firstThread = new Thread(() =>
 			{
 				try
 				{
-					countingsAreGoing = true;
-					var system = new ODESystem(100, 0.05, 67.0, 0.0, 0.962, 470, 1000, 1000);
-					foreach(var point in ModeGetter.GoThroughValuesAndGetMode(system, 0.05, 0.005, 0.051, 67.0, 0.1, 70.0, 470, 1000, 1000, Parameter.nu, Parameter.e, Mode.X))
+					var system = new ODESystem(Pr.Value, nu.Value, el.Value, r.Value, k.Value,
+						470, 1000, 1000);
+					foreach(var point in ModeGetter.GoThroughValuesAndGetMode(system, 0.05, 0.005, 0.051, 67.0, 0.1, 70.0, 470, 1000, 1000, 
+						horizontalParameter, verticalParameter, mode))
 					{
 						var invokation = mainForm.BeginInvoke((Action)(() => AddPoint(new DataPoint { X = point.HorizontalAxis, Y = point.VerticalAxis }, point.Regime)));
 						while (paused) Thread.Sleep(20);
 						if (canceled) return;
 					}
-					countingsAreGoing = false;
 				}
 
 				catch
 				{
-					throw new Exception();
+					throw new ArgumentException();
 				}
 			});
 			firstThread.Start();

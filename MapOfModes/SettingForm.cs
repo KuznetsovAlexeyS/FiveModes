@@ -39,6 +39,7 @@ namespace MapOfModes
 			{
 				Location = new Point(110, 65),
 				Size = new Size(50, 10),
+				Text = "100.0",
 			};
 			Label PrLabel = new Label
 			{
@@ -50,6 +51,7 @@ namespace MapOfModes
 			{
 				Location = new Point(110, 90),
 				Size = new Size(50, 10),
+				Text = "67.0",
 			};
 			Label eLabel = new Label
 			{
@@ -62,6 +64,7 @@ namespace MapOfModes
 			{
 				Location = new Point(110, 120),
 				Size = new Size(50, 10),
+				Text = "0.0",
 			};
 			Label rLabel = new Label
 			{
@@ -74,6 +77,7 @@ namespace MapOfModes
 			{
 				Location = new Point(110, 150),
 				Size = new Size(50, 10),
+				Text = "0.05",
 			};
 			Label nuLabel = new Label
 			{
@@ -85,6 +89,7 @@ namespace MapOfModes
 			{
 				Location = new Point(110, 170),
 				Size = new Size(50, 10),
+				Text = "0.962",
 			};
 			Label kLabel = new Label
 			{
@@ -165,6 +170,7 @@ namespace MapOfModes
 			{
 				Location = new Point(195, 120),
 				Size = new Size(50, 10),
+				Text = "0.6",
 			};
 			Label horizontalValueEndLabel = new Label
 			{
@@ -176,6 +182,7 @@ namespace MapOfModes
 			{
 				Location = new Point(195, 155),
 				Size = new Size(50, 10),
+				Text = "70.0",
 			};
 			Label verticalValueEndLabel = new Label
 			{
@@ -194,6 +201,7 @@ namespace MapOfModes
 			{
 				Location = new Point(310, 80),
 				Size = new Size(50, 10),
+				Text = "0.0",
 			};
 			Label startModeXLabel = new Label
 			{
@@ -205,6 +213,7 @@ namespace MapOfModes
 			{
 				Location = new Point(310, 105),
 				Size = new Size(50, 10),
+				Text = "0.5",
 			};
 			Label startModeYLabel = new Label
 			{
@@ -216,6 +225,7 @@ namespace MapOfModes
 			{
 				Location = new Point(310, 130),
 				Size = new Size(50, 10),
+				Text = "0.0",
 			};
 			Label startModeZLabel = new Label
 			{
@@ -227,6 +237,7 @@ namespace MapOfModes
 			{
 				Location = new Point(310, 155),
 				Size = new Size(50, 10),
+				Text = "0.0",
 			};
 			Label startModeVLabel = new Label
 			{
@@ -238,6 +249,7 @@ namespace MapOfModes
 			{
 				Location = new Point(310, 180),
 				Size = new Size(50, 10),
+				Text = "0.0",
 			};
 			Label startModeWLabel = new Label
 			{
@@ -254,8 +266,11 @@ namespace MapOfModes
 			};
 
 			mode.Items.AddRange(new string[] { "X", "Y", "Z", "V", "W" });
+			mode.SelectedItem = mode.Items[0];
 			horizontalValue.Items.AddRange(new string[] { "Pr", "nu", "e", "r", "k" });
+			horizontalValue.SelectedItem = horizontalValue.Items[1];
 			verticalValue.Items.AddRange(new string[] { "Pr", "nu", "e", "r", "k" });
+			verticalValue.SelectedItem = verticalValue.Items[2];
 
 			Controls.Add(PrLabel);
 			Controls.Add(PrStart);

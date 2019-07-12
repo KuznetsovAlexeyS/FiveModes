@@ -17,8 +17,15 @@ namespace MapOfModes
 		private int tStart;
 		private int tEnd;
 		private int iterationsInOneSecond;
+		private double startX;
+		private double startY;
+		private double startZ;
+		private double startV;
+		private double startW;
+		private bool CBMV;
 
-		public ODESystem(double Pr, double nu, double e, double r, double k, int tStart, int tEnd, int iterationsInOneSecond)
+		public ODESystem(double Pr, double nu, double e, double r, double k,
+			int tStart, int tEnd, int iterationsInOneSecond)
 		{
 			this.Pr = Pr;
 			this.nu = nu;
