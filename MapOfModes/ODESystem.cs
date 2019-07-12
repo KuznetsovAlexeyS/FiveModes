@@ -22,9 +22,9 @@ namespace MapOfModes
 		private double startZ;
 		private double startV;
 		private double startW;
-		private bool CBMV;
 
 		public ODESystem(double Pr, double nu, double e, double r, double k,
+			double startX, double startY, double startZ, double startV, double startW,
 			int tStart, int tEnd, int iterationsInOneSecond)
 		{
 			this.Pr = Pr;
@@ -40,17 +40,23 @@ namespace MapOfModes
 			this.tStart = tStart;
 			this.tEnd = tEnd;
 			this.iterationsInOneSecond = iterationsInOneSecond;
+
+			this.startX = startX;
+			this.startY = startY;
+			this.startZ = startZ;
+			this.startV = startV;
+			this.startW = startW;
 		}
 
 		public double[] Solve(int numberOfCountedMod)
 		{
 			OdeFunction fun = new OdeFunction(ODEs);
 			double[] y0 = new double[5];
-			y0[0] = 0.0; // Ќачальные услови€
-			y0[1] = 0.5;
-			y0[2] = 0.0;
-			y0[3] = 0.0;
-			y0[4] = 0.0;
+			y0[0] = startX; // Ќачальные услови€
+			y0[1] = startY;
+			y0[2] = startZ;
+			y0[3] = startV;
+			y0[4] = startW;
 			this.odeRK.InitializeODEs(fun, 5);
 			double[,] sol = odeRK.Solve(y0, 0, 1.0/iterationsInOneSecond, tEnd); // iterationsInOneSeconds -- величина, обратна€ шагу.
 			// tEnd -- врем€, до которого считаем.
@@ -60,13 +66,11 @@ namespace MapOfModes
 			{
 				mod[i - tStart*iterationsInOneSecond] = sol[i, numberOfCountedMod];
 			}
-			//if (ContinuationByMode) {
-			GlobalModes.X = sol[amountOfPoints - 1, 1];
-			GlobalModes.Y = sol[amountOfPoints - 1, 2];
-			GlobalModes.Z = sol[amountOfPoints - 1, 3];
+			GlobalModes.X = sol[amountOfPoints - 1, 1]; // Ќа случай продолжени€ по параметру. 
+			GlobalModes.Y = sol[amountOfPoints - 1, 2]; // ћожно оптимизировать, однако 5 присвоений не сильно затратны, 
+			GlobalModes.Z = sol[amountOfPoints - 1, 3]; // «ато позвол€ют сократить количество переменных, которые необходимо передовать в ODESystem
 			GlobalModes.V = sol[amountOfPoints - 1, 4];
 			GlobalModes.W = sol[amountOfPoints - 1, 5];
-			// }
 			return mod;
 		}
 

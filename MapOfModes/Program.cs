@@ -74,17 +74,20 @@ namespace MapOfModes
 			};
 			FormClosingEventHandler warning = (sender, args) =>
 			{
-				bool tempPaused = false;
-				if (paused == true) tempPaused = true;
-				paused = true;
-				var res = MessageBox.Show("Карта не сохранена, действительно закрыть приложение?", "Предупреждение", MessageBoxButtons.YesNo);
-				if (res == DialogResult.Yes)
+				if (countingStarted)
 				{
-					args.Cancel = false;
-					canceled = true;
+					bool tempPaused = false;
+					if (paused == true) tempPaused = true;
+					paused = true;
+					var res = MessageBox.Show("Расчёт ещё идёт, действительно закрыть приложение?", "Предупреждение", MessageBoxButtons.YesNo);
+					if (res == DialogResult.Yes)
+					{
+						args.Cancel = false;
+						canceled = true;
+					}
+					else args.Cancel = true;
+					paused = tempPaused;
 				}
-				else args.Cancel = true;
-				paused = tempPaused;
 			};
 			mainForm.FormClosing += warning;
 		}
@@ -122,15 +125,19 @@ namespace MapOfModes
 			{
 				try
 				{
+					countingStarted = true;
 					var system = new ODESystem(Pr.Value, nu.Value, el.Value, r.Value, k.Value,
+						startX.Value, startY.Value, startZ.Value, startV.Value, startW.Value,
 						470, 1000, 1000);
-					foreach(var point in ModeGetter.GoThroughValuesAndGetMode(system, 0.05, 0.005, 0.051, 67.0, 0.1, 70.0, 470, 1000, 1000, 
+					foreach(var point in ModeGetter.GoThroughValuesAndGetMode(system, 0.05, 0.005, 0.051, 68.8, 0.1, 71.0, 470, 1000, 1000, 
+						startX.Value, startY.Value, startZ.Value, startV.Value, startW.Value, CBMV,
 						horizontalParameter, verticalParameter, mode))
 					{
 						var invokation = mainForm.BeginInvoke((Action)(() => AddPoint(new DataPoint { X = point.HorizontalAxis, Y = point.VerticalAxis }, point.Regime)));
 						while (paused) Thread.Sleep(20);
 						if (canceled) return;
 					}
+					countingStarted = false;
 				}
 
 				catch

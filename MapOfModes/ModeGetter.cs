@@ -25,6 +25,7 @@ namespace MapOfModes
 			double horizontalValueStart, double horizontalValueStep, double horizontalValueEnd,
 			double verticalValueStart, double verticalValueStep, double verticalValueEnd,
 			int tStart, int tEnd, int iterationsInOneSecond,
+			double startX, double startY, double startZ, double startV, double startW, bool CBMV,
 			Parameter horizontalParameter, Parameter verticalParameter, Mode mode)
 		{
 			double Pr = system.Pr;
@@ -32,6 +33,18 @@ namespace MapOfModes
 			double r = system.r;
 			double nu = system.nu;
 			double k = system.k;
+
+			GlobalModes.X = startX; // Если считаем с продолжением по параметру, то будут использоваться GlobalModes, 
+			GlobalModes.Y = startY; // которым присваивается последнее значение мод, подробнее см. метод Solve классе ODESystem
+			GlobalModes.Z = startZ;
+			GlobalModes.V = startV;
+			GlobalModes.W = startW;
+
+			var X = startX;
+			var Y = startY;
+			var Z = startZ;
+			var V = startV;
+			var W = startW;
 
 			for (double horizontalValue = horizontalValueStart; horizontalValue < horizontalValueEnd; horizontalValue += horizontalValueStep)
 			{
@@ -75,7 +88,18 @@ namespace MapOfModes
 							k = verticalValue;
 							break;
 					}
-					var sys = new ODESystem(Pr, nu, e, r, k, tStart, tEnd, iterationsInOneSecond);
+
+					if (CBMV)
+					{
+						X = GlobalModes.X;
+						Y = GlobalModes.Y;
+						Z = GlobalModes.Z;
+						V = GlobalModes.V;
+						W = GlobalModes.W;
+					}
+					var sys = new ODESystem(Pr, nu, e, r, k,
+							X, Y, Z, V, W,
+							tStart, tEnd, iterationsInOneSecond);
 
 					switch (mode) // Аргумент в Solve для моды X -- 1, Y -- 2, Z -- 3, V -- 4, W -- 5. 
 					{
