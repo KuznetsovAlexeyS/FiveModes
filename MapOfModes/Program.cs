@@ -104,10 +104,17 @@ namespace MapOfModes
 			ParserToDouble startZ = new ParserToDouble(settingForm.startModeZ.Text);
 			ParserToDouble startV = new ParserToDouble(settingForm.startModeV.Text);
 			ParserToDouble startW = new ParserToDouble(settingForm.startModeW.Text);
+			ParserToDouble horizontalValueStart = new ParserToDouble(settingForm.horizontalValueStart.Text);
+			ParserToDouble verticalValueStart = new ParserToDouble(settingForm.verticalValueStart.Text);
+			ParserToDouble horizontalValueStep = new ParserToDouble(settingForm.horizontalValueStep.Text);
+			ParserToDouble verticalValueStep = new ParserToDouble(settingForm.verticalValueStep.Text);
 			ParserToDouble horizontalValueEnd = new ParserToDouble(settingForm.horizontalValueEnd.Text);
 			ParserToDouble verticalValueEnd = new ParserToDouble(settingForm.verticalValueEnd.Text);
+
 			if (!Pr.IsDataCorrect || !el.IsDataCorrect || !r.IsDataCorrect || !nu.IsDataCorrect || !k.IsDataCorrect
 				|| !startX.IsDataCorrect || !startY.IsDataCorrect || !startZ.IsDataCorrect || !startV.IsDataCorrect || !startW.IsDataCorrect
+				|| !horizontalValueStart.IsDataCorrect || !verticalValueStart.IsDataCorrect
+				|| !horizontalValueStep.IsDataCorrect || !verticalValueStart.IsDataCorrect
 				|| !horizontalValueEnd.IsDataCorrect || !verticalValueEnd.IsDataCorrect)
 			{
 				dataIsCorrect = false;
@@ -116,8 +123,8 @@ namespace MapOfModes
 			}
 			else dataIsCorrect = true;
 
-			var horizontalParameter = ParserToEnums.ParseToParameter(settingForm.horizontalValue.SelectedItem.ToString());
-			var verticalParameter = ParserToEnums.ParseToParameter(settingForm.verticalValue.SelectedItem.ToString());
+			var horizontalParameter = ParserToEnums.ParseToParameter(settingForm.horizontalParameter.SelectedItem.ToString());
+			var verticalParameter = ParserToEnums.ParseToParameter(settingForm.verticalParameter.SelectedItem.ToString());
 			var mode = ParserToEnums.ParseToMode(settingForm.mode.SelectedItem.ToString());
 			var CBMV = settingForm.continuationByMode.Checked;
 
@@ -129,7 +136,10 @@ namespace MapOfModes
 					var system = new ODESystem(Pr.Value, nu.Value, el.Value, r.Value, k.Value,
 						startX.Value, startY.Value, startZ.Value, startV.Value, startW.Value,
 						470, 1000, 1000);
-					foreach(var point in ModeGetter.GoThroughValuesAndGetMode(system, 0.05, 0.005, 0.051, 68.8, 0.1, 71.0, 470, 1000, 1000, 
+					foreach(var point in ModeGetter.GoThroughValuesAndGetMode(system, 
+						horizontalValueStart.Value, horizontalValueStep.Value, horizontalValueEnd.Value, 
+						verticalValueStart.Value, verticalValueStep.Value, verticalValueEnd.Value, 
+						470, 1000, 1000, 
 						startX.Value, startY.Value, startZ.Value, startV.Value, startW.Value, CBMV,
 						horizontalParameter, verticalParameter, mode))
 					{

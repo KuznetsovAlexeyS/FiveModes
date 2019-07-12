@@ -46,7 +46,9 @@ namespace MapOfModes
 			var V = startV;
 			var W = startW;
 
-			for (double horizontalValue = horizontalValueStart; horizontalValue < horizontalValueEnd; horizontalValue += horizontalValueStep)
+			var eps = 0.0000001;
+
+			for (double horizontalValue = horizontalValueStart; horizontalValue <= horizontalValueEnd + eps; horizontalValue += horizontalValueStep)
 			{
 
 				switch (horizontalParameter)
@@ -68,7 +70,7 @@ namespace MapOfModes
 						break;
 				}
 
-				for (double verticalValue = verticalValueStart; verticalValue < verticalValueEnd; verticalValue += verticalValueStep)
+				for (double verticalValue = verticalValueStart; verticalValue <= verticalValueEnd + eps; verticalValue += verticalValueStep)
 				{
 					switch (verticalParameter)
 					{

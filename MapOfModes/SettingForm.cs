@@ -9,8 +9,8 @@ namespace MapOfModes
 	class SettingForm : Form
 	{
 		public ComboBox mode { get; }
-		public ComboBox horizontalValue { get; }
-		public ComboBox verticalValue { get; }
+		public ComboBox horizontalParameter { get; }
+		public ComboBox verticalParameter { get; }
 		private Button cancel;
 		public Button accept { get; }
 		public TextBox PrStart { get; }
@@ -119,7 +119,7 @@ namespace MapOfModes
 				FlatStyle = FlatStyle.Flat,
 			};
 
-			this.horizontalValue = new ComboBox
+			this.horizontalParameter = new ComboBox
 			{
 				Location = new Point(85, 35),
 				Size = new Size(50, 20),
@@ -142,45 +142,33 @@ namespace MapOfModes
 
 			};
 
-			this.horizontalValue = new ComboBox
+			this.horizontalParameter = new ComboBox
 			{
 				Location = new Point(210, 35),
 				Size = new Size(50, 20),
 				Visible = true,
 				Text = "Pr",
 			};
-			Label horizontalValueLabel = new Label
+			Label horizontalParameterLabel = new Label
 			{
 				Location = new Point(205, 5),
 				Size = new Size(95, 30),
 				Text = "Горизонтальный параметр",
 			};
 
-			this.verticalValue = new ComboBox
+			this.verticalParameter = new ComboBox
 			{
 				Location = new Point(310, 35),
 				Size = new Size(50, 20),
 				Visible = true,
 				Text = "Pr",
 			};
-			Label verticalValueLabel = new Label
+			Label verticalParameterLabel = new Label
 			{
 				Location = new Point(305, 5),
 				Size = new Size(120, 30),
 				Text = "Вертикальный параметр",
 			};
-			/*
-			this.verticalValueEnd = new TextBox
-			{
-				Location = new Point(195, 155),
-				Size = new Size(50, 10),
-				Text = "70.0",
-			};
-			Label verticalValueEndLabel = new Label
-			{
-				Location = new Point(190, 140),
-				Text = "по вертикали:",
-			};*/
 
 			this.horizontalValueStart = new TextBox
 			{
@@ -337,10 +325,10 @@ namespace MapOfModes
 
 			mode.Items.AddRange(new string[] { "X", "Y", "Z", "V", "W" });
 			mode.SelectedItem = mode.Items[0];
-			horizontalValue.Items.AddRange(new string[] { "Pr", "nu", "e", "r", "k" });
-			horizontalValue.SelectedItem = horizontalValue.Items[1];
-			verticalValue.Items.AddRange(new string[] { "Pr", "nu", "e", "r", "k" });
-			verticalValue.SelectedItem = verticalValue.Items[2];
+			horizontalParameter.Items.AddRange(new string[] { "Pr", "nu", "e", "r", "k" });
+			horizontalParameter.SelectedItem = horizontalParameter.Items[1];
+			verticalParameter.Items.AddRange(new string[] { "Pr", "nu", "e", "r", "k" });
+			verticalParameter.SelectedItem = verticalParameter.Items[2];
 
 			Controls.Add(PrLabel);
 			Controls.Add(PrStart);
@@ -355,11 +343,11 @@ namespace MapOfModes
 			Controls.Add(accept);
 			Controls.Add(cancel);
 			Controls.Add(mode);
-			Controls.Add(horizontalValue);
-			Controls.Add(verticalValue);
+			Controls.Add(horizontalParameter);
+			Controls.Add(verticalParameter);
 			Controls.Add(modeLabel);
-			Controls.Add(horizontalValueLabel);
-			Controls.Add(verticalValueLabel);
+			Controls.Add(horizontalParameterLabel);
+			Controls.Add(verticalParameterLabel);
 			Controls.Add(horizontalValueStart);
 			Controls.Add(horizontalValueStartLabel);
 			Controls.Add(horizontalValueStep);
