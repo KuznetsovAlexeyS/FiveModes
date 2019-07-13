@@ -127,20 +127,6 @@ namespace MapOfModes
 			}
 		}
 
-		public static Regime GetMode(double[] origFunction)
-		{
-			if (origFunction.Max() < 0.1) return Regime.Fading;
-			double[] funcAfterFFT = FFT.GetFFT(origFunction).Take(3000).ToArray();
-			int extremumCounter = 0;
-			for (int i = 2; i < funcAfterFFT.Length; i++)
-			{
-				if ((funcAfterFFT[i - 2] > funcAfterFFT[i - 1] && funcAfterFFT[i] > funcAfterFFT[i - 1])
-					|| (funcAfterFFT[i - 2] < funcAfterFFT[i - 1] && funcAfterFFT[i] < funcAfterFFT[i - 1])) extremumCounter++;
-			} // ƒобавить медианное среднеквадратичное отклонение вместо числа экстремумов дл€ определени€ хаоса и определение квазипериодических зон.
-			if (extremumCounter * 3 > funcAfterFFT.Length) return Regime.Chaos;
-			return Regime.QuasiPeriodic;
-		}
-
 		private static bool MakingModesUntil(double startValue, double currentValue, double finalValue)// Ќа тот случай, если мы захотим идти от большего к меньшему
 		{
 			double eps = 0.000000001;
@@ -154,6 +140,20 @@ namespace MapOfModes
 		{
 			if (startValue > finalValue) return currentValue - step;
 			return currentValue + step;
+		}
+
+		public static Regime GetMode(double[] origFunction)
+		{
+			if (origFunction.Max() < 0.1) return Regime.Fading;
+			double[] funcAfterFFT = FFT.GetFFT(origFunction).Take(3000).ToArray();
+			int extremumCounter = 0;
+			for (int i = 2; i < funcAfterFFT.Length; i++)
+			{
+				if ((funcAfterFFT[i - 2] > funcAfterFFT[i - 1] && funcAfterFFT[i] > funcAfterFFT[i - 1])
+					|| (funcAfterFFT[i - 2] < funcAfterFFT[i - 1] && funcAfterFFT[i] < funcAfterFFT[i - 1])) extremumCounter++;
+			} // ƒобавить медианное среднеквадратичное отклонение вместо числа экстремумов дл€ определени€ хаоса и определение квазипериодических зон.
+			if (extremumCounter * 3 > funcAfterFFT.Length) return Regime.Chaos;
+			return Regime.QuasiPeriodic;
 		}
 	}
 }

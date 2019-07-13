@@ -134,10 +134,13 @@ namespace MapOfModes
 			var mode = ParserToEnums.ParseToMode(settingForm.mode.SelectedItem.ToString());
 			var CBMV = settingForm.continuationByMode.Checked;
 
+			chart.GraphPane.Title.Text = "Карта режимов для моды " + mode.ToString();
 			chart.GraphPane.XAxis.Title.Text = horizontalParameter.ToString(); 
 			chart.GraphPane.YAxis.Title.Text = verticalParameter.ToString();
 
 			var title = new StringBuilder();
+			title.Append(mode.ToString());
+			title.Append(" ");
 			title.Append(horizontalParameter.ToString());
 			title.Append(" ");
 			title.Append(verticalParameter.ToString());

@@ -58,5 +58,26 @@ namespace MapOfModes
 			}
 			return parsedOne;
 		}
+
+		public static Regime ParseToRegime(string s)
+		{
+			Regime parsedOne = new Regime();
+			switch (s)
+			{
+				case "Chaos":
+					parsedOne = Regime.Chaos;
+					break;
+				case "QuasiPeriodic":
+					parsedOne = Regime.QuasiPeriodic;
+					break;
+				case "Fading":
+					parsedOne = Regime.Fading;
+					break;
+				case "SomethingUnknown":
+					parsedOne = Regime.SomethingUnknown;
+					break;
+			}
+			return parsedOne;
+		}
 	}
 }
