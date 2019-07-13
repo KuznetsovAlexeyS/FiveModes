@@ -69,6 +69,7 @@ namespace MapOfModes
 				paused = !paused;
 			};
 			mainForm.save.Click += (sender, args) => Save();
+			mainForm.read.Click += (sender, args) => Read();
 		
 			settingForm = new SettingForm { };
 			mainForm.openSettings.Click += (sender, args) => settingForm.Show();
@@ -134,9 +135,7 @@ namespace MapOfModes
 			var mode = ParserToEnums.ParseToMode(settingForm.mode.SelectedItem.ToString());
 			var CBMV = settingForm.continuationByMode.Checked;
 
-			chart.GraphPane.Title.Text = "Карта режимов для моды " + mode.ToString();
-			chart.GraphPane.XAxis.Title.Text = horizontalParameter.ToString(); 
-			chart.GraphPane.YAxis.Title.Text = verticalParameter.ToString();
+			SubscribeAxis(mode, horizontalParameter, verticalParameter);
 
 			var title = new StringBuilder();
 			title.Append(mode.ToString());
@@ -229,7 +228,36 @@ namespace MapOfModes
 		
 		private void Read()
 		{
+			string[] data = File.ReadAllLines("SavedMap.txt");
+			var parameters = data[0].Split(' ');
 
+			var mode = ParserToEnums.ParseToMode(parameters[0]);
+			var horizontal = ParserToEnums.ParseToParameter(parameters[1]);
+			var vertical = ParserToEnums.ParseToParameter(parameters[2]);
+
+			var cutData = data.Skip(1);
+
+			SubscribeAxis(mode, horizontal, vertical);
+
+			foreach(var point in cutData)
+			{
+				var splitedString = point.Split(' ');
+
+				var horizontalValue = Double.Parse(splitedString[0]);
+				var verticalValue = Double.Parse(splitedString[1]);
+				var regime = ParserToEnums.ParseToRegime(splitedString[2]);
+
+				var invokation = mainForm.BeginInvoke((Action)(() => 
+				AddPoint(new DataPoint { X = horizontalValue, Y = verticalValue }, regime)));
+			}
+
+		}
+
+		private void SubscribeAxis(Mode mode, Parameter horizontal, Parameter vertical)
+		{
+			chart.GraphPane.Title.Text = "Карта режимов для моды " + mode.ToString();
+			chart.GraphPane.XAxis.Title.Text = horizontal.ToString();
+			chart.GraphPane.YAxis.Title.Text = vertical.ToString();
 		}
 	}
 }
