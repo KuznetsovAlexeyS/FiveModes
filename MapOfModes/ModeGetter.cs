@@ -46,9 +46,9 @@ namespace MapOfModes
 			var V = startV;
 			var W = startW;
 
-			var eps = 0.0000001;
-
-			for (double horizontalValue = horizontalValueStart; horizontalValue <= horizontalValueEnd + eps; horizontalValue += horizontalValueStep)
+			for (double horizontalValue = horizontalValueStart; 
+				MakingModesUntil(horizontalValueStart, horizontalValue, horizontalValueEnd); 
+				horizontalValue = MakeStep(horizontalValueStart, horizontalValue, horizontalValueStep, horizontalValueEnd))
 			{
 
 				switch (horizontalParameter)
@@ -70,7 +70,9 @@ namespace MapOfModes
 						break;
 				}
 
-				for (double verticalValue = verticalValueStart; verticalValue <= verticalValueEnd + eps; verticalValue += verticalValueStep)
+				for (double verticalValue = verticalValueStart;
+				MakingModesUntil(verticalValueStart, verticalValue, verticalValueEnd);
+				verticalValue = MakeStep(verticalValueStart, verticalValue, verticalValueStep, verticalValueEnd))
 				{
 					switch (verticalParameter)
 					{
@@ -137,6 +139,21 @@ namespace MapOfModes
 			} // ƒобавить медианное среднеквадратичное отклонение вместо числа экстремумов дл€ определени€ хаоса и определение квазипериодических зон.
 			if (extremumCounter * 3 > funcAfterFFT.Length) return Regime.Chaos;
 			return Regime.QuasiPeriodic;
+		}
+
+		private static bool MakingModesUntil(double startValue, double currentValue, double finalValue)// Ќа тот случай, если мы захотим идти от большего к меньшему
+		{
+			double eps = 0.000000001;
+			if (startValue > finalValue && currentValue > finalValue - eps) return true;
+			if (startValue > finalValue && currentValue < finalValue) return false;
+			if (startValue < finalValue && currentValue < finalValue + eps) return true;
+			return false;
+		}
+
+		private static double MakeStep(double startValue, double currentValue, double step, double finalValue)
+		{
+			if (startValue > finalValue) return currentValue - step;
+			return currentValue + step;
 		}
 	}
 }

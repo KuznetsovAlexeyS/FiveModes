@@ -1,10 +1,12 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using System.IO;
 using ZedGraph;
+using System.Collections.Generic;
+using System.Text;
 
 namespace MapOfModes
 {
@@ -22,9 +24,12 @@ namespace MapOfModes
 		private PointPairList chaosCountedPoints;
 		private PointPairList somethingUnknownCountedPoints;
 		private Thread firstThread;
+		private volatile List<StringBuilder> saved;
 
 		public Program()
 		{
+			saved = new List<StringBuilder>();
+
 			mainForm = new CustomForm
 			{
 				WindowState = FormWindowState.Maximized,
@@ -35,8 +40,8 @@ namespace MapOfModes
 				Location = new Point(0, 0),
 				Dock = DockStyle.Fill,
 			};
-			chart.GraphPane.Title.Text = "...";
-			chart.GraphPane.XAxis.Title.Text = "..."; // НЕ ЗАБЫТЬ СДЕЛАТЬ ТАК, ЧТОБЫ ОНИ МЕНЯЛИСЬ ПРИ ИЗМЕНЕНИИ ПАРАМЕТРОВ ВЫЗОВА GoThroughValuesAndGetMode
+			chart.GraphPane.Title.Text = "Карта режимов";
+			chart.GraphPane.XAxis.Title.Text = "...";
 			chart.GraphPane.YAxis.Title.Text = "...";
 
 			fadingCountedPoints = new PointPairList();
@@ -63,6 +68,7 @@ namespace MapOfModes
 			{
 				paused = !paused;
 			};
+			mainForm.save.Click += (sender, args) => Save();
 		
 			settingForm = new SettingForm { };
 			mainForm.openSettings.Click += (sender, args) => settingForm.Show();
@@ -128,6 +134,15 @@ namespace MapOfModes
 			var mode = ParserToEnums.ParseToMode(settingForm.mode.SelectedItem.ToString());
 			var CBMV = settingForm.continuationByMode.Checked;
 
+			chart.GraphPane.XAxis.Title.Text = horizontalParameter.ToString(); 
+			chart.GraphPane.YAxis.Title.Text = verticalParameter.ToString();
+
+			var title = new StringBuilder();
+			title.Append(horizontalParameter.ToString());
+			title.Append(" ");
+			title.Append(verticalParameter.ToString());
+			saved.Add(title);
+
 			firstThread = new Thread(() =>
 			{
 				try
@@ -144,6 +159,15 @@ namespace MapOfModes
 						horizontalParameter, verticalParameter, mode))
 					{
 						var invokation = mainForm.BeginInvoke((Action)(() => AddPoint(new DataPoint { X = point.HorizontalAxis, Y = point.VerticalAxis }, point.Regime)));
+						var infoString = new StringBuilder();
+
+						infoString.Append(point.HorizontalAxis.ToString());
+						infoString.Append(" ");
+						infoString.Append(point.VerticalAxis.ToString());
+						infoString.Append(" ");
+						infoString.Append(point.Regime.ToString());
+						saved.Add(infoString);
+
 						while (paused) Thread.Sleep(20);
 						if (canceled) return;
 					}
@@ -188,6 +212,21 @@ namespace MapOfModes
 			chart.AxisChange();
 			chart.Invalidate();
 			chart.Refresh();
+		}
+
+		private void Save()
+		{
+			var savedStrings = new string[saved.Count];
+			for(int i=0; i<saved.Count; i++)
+			{
+				savedStrings[i] = saved[i].ToString();
+			}
+			File.WriteAllLines("SavedMap.txt", savedStrings);
+		}
+		
+		private void Read()
+		{
+
 		}
 	}
 }

@@ -200,7 +200,7 @@ namespace MapOfModes
 			{
 				Location = new Point(210, 230),
 				Size = new Size(50, 10),
-				Text = "0.6",
+				Text = "0.06",
 			};
 			Label horizontalValueEndLabel = new Label
 			{
