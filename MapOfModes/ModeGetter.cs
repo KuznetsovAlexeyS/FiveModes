@@ -34,12 +34,6 @@ namespace MapOfModes
 			double nu = system.nu;
 			double k = system.k;
 
-			GlobalModes.X = startX; // Если считаем с продолжением по параметру, то будут использоваться GlobalModes, 
-			GlobalModes.Y = startY; // которым присваивается последнее значение мод, подробнее см. метод Solve классе ODESystem
-			GlobalModes.Z = startZ;
-			GlobalModes.V = startV;
-			GlobalModes.W = startW;
-
 			var X = startX;
 			var Y = startY;
 			var Z = startZ;
@@ -50,6 +44,11 @@ namespace MapOfModes
 				MakingModesUntil(horizontalValueStart, horizontalValue, horizontalValueEnd); 
 				horizontalValue = MakeStep(horizontalValueStart, horizontalValue, horizontalValueStep, horizontalValueEnd))
 			{
+				GlobalModes.X = startX; // Если считаем с продолжением по параметру, то будут использоваться GlobalModes, 
+				GlobalModes.Y = startY; // которым присваивается последнее значение мод, подробнее см. метод Solve классе ODESystem
+				GlobalModes.Z = startZ;
+				GlobalModes.V = startV;
+				GlobalModes.W = startW;
 
 				switch (horizontalParameter)
 				{
@@ -104,7 +103,6 @@ namespace MapOfModes
 					var sys = new ODESystem(Pr, nu, e, r, k,
 							X, Y, Z, V, W,
 							tStart, tEnd, iterationsInOneSecond);
-
 					switch (mode) // Аргумент в Solve для моды X -- 1, Y -- 2, Z -- 3, V -- 4, W -- 5. 
 					{
 						case Mode.X:
@@ -152,8 +150,8 @@ namespace MapOfModes
 				if ((funcAfterFFT[i - 2] > funcAfterFFT[i - 1] && funcAfterFFT[i] > funcAfterFFT[i - 1])
 					|| (funcAfterFFT[i - 2] < funcAfterFFT[i - 1] && funcAfterFFT[i] < funcAfterFFT[i - 1])) extremumCounter++;
 			} // Добавить медианное среднеквадратичное отклонение вместо числа экстремумов для определения хаоса и определение квазипериодических зон.
-			if (extremumCounter * 3 > funcAfterFFT.Length) return Regime.Chaos;
-			return Regime.QuasiPeriodic;
+			if (extremumCounter * 4 > funcAfterFFT.Length) return Regime.Chaos;
+			return Regime.SomethingUnknown;
 		}
 	}
 }

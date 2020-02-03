@@ -152,11 +152,11 @@ namespace MapOfModes
 					countingStarted = true;
 					var system = new ODESystem(Pr.Value, nu.Value, el.Value, r.Value, k.Value,
 						startX.Value, startY.Value, startZ.Value, startV.Value, startW.Value,
-						470, 1000, 1000);
+						475, 1000, 1000);
 					foreach(var point in ModeGetter.GoThroughValuesAndGetMode(system, 
 						horizontalValueStart.Value, horizontalValueStep.Value, horizontalValueEnd.Value, 
 						verticalValueStart.Value, verticalValueStep.Value, verticalValueEnd.Value, 
-						470, 1000, 1000, 
+						475, 1000, 1000, 
 						startX.Value, startY.Value, startZ.Value, startV.Value, startW.Value, CBMV,
 						horizontalParameter, verticalParameter, mode))
 					{
@@ -168,6 +168,10 @@ namespace MapOfModes
 						infoString.Append(point.VerticalAxis.ToString());
 						infoString.Append(" ");
 						infoString.Append(point.Regime.ToString());
+						infoString.Append(" ");
+						infoString.Append(DateTime.Now.Minute.ToString() + " " 
+							+ DateTime.Now.Second.ToString() + " " 
+							+ DateTime.Now.Millisecond.ToString());
 						saved.Add(infoString);
 
 						while (paused) Thread.Sleep(20);
