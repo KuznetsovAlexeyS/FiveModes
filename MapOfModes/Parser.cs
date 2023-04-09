@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Linq;
 
 namespace MapOfModes
@@ -8,8 +8,8 @@ namespace MapOfModes
 		public double Value { get; }
 		public bool IsDataCorrect { get; }
 
-		public ParserToDouble(string str) // Преобразует строку в число. Метод работает и с форматом "6.13" и с форматом "6,13", 
-			//поэтому он слегка больше, чем просто TryParse
+		public ParserToDouble(string str) // РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєСѓ РІ С‡РёСЃР»Рѕ. РњРµС‚РѕРґ СЂР°Р±РѕС‚Р°РµС‚ Рё СЃ С„РѕСЂРјР°С‚РѕРј "6.13" Рё СЃ С„РѕСЂРјР°С‚РѕРј "6,13", 
+			//РїРѕСЌС‚РѕРјСѓ РѕРЅ СЃР»РµРіРєР° Р±РѕР»СЊС€Рµ, С‡РµРј РїСЂРѕСЃС‚Рѕ TryParse
 		{
 			double k = 0.0;
 			char[] number = str.ToCharArray();

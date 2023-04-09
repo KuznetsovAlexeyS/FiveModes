@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using DotNumerics.ODE;
 
 namespace MapOfModes
@@ -6,11 +6,11 @@ namespace MapOfModes
 	public partial class ODESystem
 	{
 
-		public double Pr { get; } // число Прантдля
-		public double nu { get; } // частота электрического поля
-		public double e { get; } // электрическое число Рэлея
-		public double r { get; } // тепловое число Рэлея
-		public double k { get; } // волновое число
+		public double Pr { get; } // С‡РёСЃР»Рѕ РџСЂР°РЅС‚РґР»СЏ
+		public double nu { get; } // С‡Р°СЃС‚РѕС‚Р° СЌР»РµРєС‚СЂРёС‡РµСЃРєРѕРіРѕ РїРѕР»СЏ
+		public double e { get; } // СЌР»РµРєС‚СЂРёС‡РµСЃРєРѕРµ С‡РёСЃР»Рѕ Р СЌР»РµСЏ
+		public double r { get; } // С‚РµРїР»РѕРІРѕРµ С‡РёСЃР»Рѕ Р СЌР»РµСЏ
+		public double k { get; } // РІРѕР»РЅРѕРІРѕРµ С‡РёСЃР»Рѕ
 		private double b;
 		private double d;
 		private int tStart;
@@ -33,9 +33,9 @@ namespace MapOfModes
 			this.k = k;
 			this.b = 4 / (1 + k * k);
 			this.d = (4 + k * k) / (1 + k * k);
-			if (tStart >= tEnd || tEnd > 1000) throw new ArgumentException(); // Начальное время не может быть больше конечного времени, 
-			//также, по техническим ограничениям, конечное время не может быть больше 1000. Если хотите больше -- организуйте запись в файл 
-			//с последующим чтением или создайте несколько массивов.
+			if (tStart >= tEnd || tEnd > 1000) throw new ArgumentException(); // РќР°С‡Р°Р»СЊРЅРѕРµ РІСЂРµРјСЏ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ РєРѕРЅРµС‡РЅРѕРіРѕ РІСЂРµРјРµРЅРё, 
+			//С‚Р°РєР¶Рµ, РїРѕ С‚РµС…РЅРёС‡РµСЃРєРёРј РѕРіСЂР°РЅРёС‡РµРЅРёСЏРј, РєРѕРЅРµС‡РЅРѕРµ РІСЂРµРјСЏ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ 1000. Р•СЃР»Рё С…РѕС‚РёС‚Рµ Р±РѕР»СЊС€Рµ -- РѕСЂРіР°РЅРёР·СѓР№С‚Рµ Р·Р°РїРёСЃСЊ РІ С„Р°Р№Р» 
+			//СЃ РїРѕСЃР»РµРґСѓСЋС‰РёРј С‡С‚РµРЅРёРµРј РёР»Рё СЃРѕР·РґР°Р№С‚Рµ РЅРµСЃРєРѕР»СЊРєРѕ РјР°СЃСЃРёРІРѕРІ.
 			this.tStart = tStart;
 			this.tEnd = tEnd;
 			this.iterationsInOneSecond = iterationsInOneSecond;
@@ -53,14 +53,14 @@ namespace MapOfModes
 		{
 			//OdeFunction fun = new OdeFunction(ODEs);
 			double[] startValues = new double[5];
-			startValues[0] = startX; // Начальные условия
+			startValues[0] = startX; // РќР°С‡Р°Р»СЊРЅС‹Рµ СѓСЃР»РѕРІРёСЏ
 			startValues[1] = startY;
 			startValues[2] = startZ;
 			startValues[3] = startV;
 			startValues[4] = startW;
 			//this.odeRK.InitializeODEs(fun, 5);
-			//double[,] sol = odeRK.Solve(y0, 0, 1.0 / iterationsInOneSecond, tEnd); // iterationsInOneSeconds -- величина, обратная шагу.
-			// tEnd -- время, до которого считаем.*/
+			//double[,] sol = odeRK.Solve(y0, 0, 1.0 / iterationsInOneSecond, tEnd); // iterationsInOneSeconds -- РІРµР»РёС‡РёРЅР°, РѕР±СЂР°С‚РЅР°СЏ С€Р°РіСѓ.
+			// tEnd -- РІСЂРµРјСЏ, РґРѕ РєРѕС‚РѕСЂРѕРіРѕ СЃС‡РёС‚Р°РµРј.*/
 
 			RungeKuttaSolver solver = new RungeKuttaSolver(
 				startValues, 0, 1000000, 0.001, 0.000001,
@@ -68,7 +68,7 @@ namespace MapOfModes
 				{
 					double[] yprime = new double[5];
 					double cos = Math.Cos(2 * Math.PI * nu * t);
-					yprime[0] = Pr * (-y[0] + r * y[1] + e * y[4] * cos * cos); // Система уравнений
+					yprime[0] = Pr * (-y[0] + r * y[1] + e * y[4] * cos * cos); // РЎРёСЃС‚РµРјР° СѓСЂР°РІРЅРµРЅРёР№
 					yprime[1] = -y[1] + y[0] + y[0] * y[2];
 					yprime[2] = -b * y[2] - y[0] * y[1];
 					yprime[3] = Pr * (-d * y[3] + (r * y[4] - e * y[1] * cos * cos) / d);
@@ -78,15 +78,15 @@ namespace MapOfModes
 
 			var sol = solver.Solve();
 
-			double[] mod = new double[sol.GetLength(0) - tStart * iterationsInOneSecond]; // Отсекаем всё до момента времени tStart.
+			double[] mod = new double[sol.GetLength(0) - tStart * iterationsInOneSecond]; // РћС‚СЃРµРєР°РµРј РІСЃС‘ РґРѕ РјРѕРјРµРЅС‚Р° РІСЂРµРјРµРЅРё tStart.
 			int amountOfPoints = sol.GetLength(0);
 			for (int i = tStart * iterationsInOneSecond; i < amountOfPoints; i++)
 			{
 				mod[i - tStart * iterationsInOneSecond] = sol[i][numberOfCountedMod];
 			}
-			GlobalModes.X = sol[amountOfPoints - 1][1]; // На случай продолжения по параметру. 
-			GlobalModes.Y = sol[amountOfPoints - 1][2]; // Можно оптимизировать, однако 5 присвоений не сильно затратны, 
-			GlobalModes.Z = sol[amountOfPoints - 1][3]; // Зато позволяют сократить количество переменных, которые необходимо передовать в ODESystem
+			GlobalModes.X = sol[amountOfPoints - 1][1]; // РќР° СЃР»СѓС‡Р°Р№ РїСЂРѕРґРѕР»Р¶РµРЅРёСЏ РїРѕ РїР°СЂР°РјРµС‚СЂСѓ. 
+			GlobalModes.Y = sol[amountOfPoints - 1][2]; // РњРѕР¶РЅРѕ РѕРїС‚РёРјРёР·РёСЂРѕРІР°С‚СЊ, РѕРґРЅР°РєРѕ 5 РїСЂРёСЃРІРѕРµРЅРёР№ РЅРµ СЃРёР»СЊРЅРѕ Р·Р°С‚СЂР°С‚РЅС‹, 
+			GlobalModes.Z = sol[amountOfPoints - 1][3]; // Р—Р°С‚Рѕ РїРѕР·РІРѕР»СЏСЋС‚ СЃРѕРєСЂР°С‚РёС‚СЊ РєРѕР»РёС‡РµСЃС‚РІРѕ РїРµСЂРµРјРµРЅРЅС‹С…, РєРѕС‚РѕСЂС‹Рµ РЅРµРѕР±С…РѕРґРёРјРѕ РїРµСЂРµРґРѕРІР°С‚СЊ РІ ODESystem
 			GlobalModes.V = sol[amountOfPoints - 1][4];
 			GlobalModes.W = sol[amountOfPoints - 1][5];
 			return mod;
@@ -96,7 +96,7 @@ namespace MapOfModes
 
 		private double[] ODEs(double t, double[] y)
 		{
-			yprime[0] = Pr * (-y[0] + r * y[1] + e * y[4] * Math.Cos(2 * Math.PI * nu * t) * Math.Cos(2 * Math.PI * nu * t)); // Система уравнений
+			yprime[0] = Pr * (-y[0] + r * y[1] + e * y[4] * Math.Cos(2 * Math.PI * nu * t) * Math.Cos(2 * Math.PI * nu * t)); // РЎРёСЃС‚РµРјР° СѓСЂР°РІРЅРµРЅРёР№
 			yprime[1] = -y[1] + y[0] + y[0] * y[2];
 			yprime[2] = -b * y[2] - y[0] * y[1];
 			yprime[3] = Pr * (-d * y[3] + (r * y[4] - e * y[1] * Math.Cos(2 * Math.PI * nu * t) * Math.Cos(2 * Math.PI * nu * t)) / d);

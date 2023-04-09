@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -44,8 +44,8 @@ namespace MapOfModes
 				MakingModesUntil(horizontalValueStart, horizontalValue, horizontalValueEnd); 
 				horizontalValue = MakeStep(horizontalValueStart, horizontalValue, horizontalValueStep, horizontalValueEnd))
 			{
-				GlobalModes.X = startX; // Åñëè ñ÷èòàåì ñ ïðîäîëæåíèåì ïî ïàðàìåòðó, òî áóäóò èñïîëüçîâàòüñÿ GlobalModes, 
-				GlobalModes.Y = startY; // êîòîðûì ïðèñâàèâàåòñÿ ïîñëåäíåå çíà÷åíèå ìîä, ïîäðîáíåå ñì. ìåòîä Solve êëàññå ODESystem
+				GlobalModes.X = startX; // Ð•ÑÐ»Ð¸ ÑÑ‡Ð¸Ñ‚Ð°ÐµÐ¼ Ñ Ð¿Ñ€Ð¾Ð´Ð¾Ð»Ð¶ÐµÐ½Ð¸ÐµÐ¼ Ð¿Ð¾ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ñƒ, Ñ‚Ð¾ Ð±ÑƒÐ´ÑƒÑ‚ Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÑŒÑÑ GlobalModes, 
+				GlobalModes.Y = startY; // ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ð¼ Ð¿Ñ€Ð¸ÑÐ²Ð°Ð¸Ð²Ð°ÐµÑ‚ÑÑ Ð¿Ð¾ÑÐ»ÐµÐ´Ð½ÐµÐµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ Ð¼Ð¾Ð´, Ð¿Ð¾Ð´Ñ€Ð¾Ð±Ð½ÐµÐµ ÑÐ¼. Ð¼ÐµÑ‚Ð¾Ð´ Solve ÐºÐ»Ð°ÑÑÐµ ODESystem
 				GlobalModes.Z = startZ;
 				GlobalModes.V = startV;
 				GlobalModes.W = startW;
@@ -103,7 +103,7 @@ namespace MapOfModes
 					var sys = new ODESystem(Pr, nu, e, r, k,
 							X, Y, Z, V, W,
 							tStart, tEnd, iterationsInOneSecond);
-					switch (mode) // Àðãóìåíò â Solve äëÿ ìîäû X -- 1, Y -- 2, Z -- 3, V -- 4, W -- 5. 
+					switch (mode) // ÐÑ€Ð³ÑƒÐ¼ÐµÐ½Ñ‚ Ð² Solve Ð´Ð»Ñ Ð¼Ð¾Ð´Ñ‹ X -- 1, Y -- 2, Z -- 3, V -- 4, W -- 5. 
 					{
 						case Mode.X:
 							yield return new ModeInSpace(GetMode(sys.Solve(1)), horizontalValue, verticalValue);
@@ -125,7 +125,7 @@ namespace MapOfModes
 			}
 		}
 
-		private static bool MakingModesUntil(double startValue, double currentValue, double finalValue)// Íà òîò ñëó÷àé, åñëè ìû çàõîòèì èäòè îò áîëüøåãî ê ìåíüøåìó
+		private static bool MakingModesUntil(double startValue, double currentValue, double finalValue)// ÐÐ° Ñ‚Ð¾Ñ‚ ÑÐ»ÑƒÑ‡Ð°Ð¹, ÐµÑÐ»Ð¸ Ð¼Ñ‹ Ð·Ð°Ñ…Ð¾Ñ‚Ð¸Ð¼ Ð¸Ð´Ñ‚Ð¸ Ð¾Ñ‚ Ð±Ð¾Ð»ÑŒÑˆÐµÐ³Ð¾ Ðº Ð¼ÐµÐ½ÑŒÑˆÐµÐ¼Ñƒ
 		{
 			double eps = 0.000000001;
 			if (startValue > finalValue && currentValue > finalValue - eps) return true;
@@ -149,7 +149,7 @@ namespace MapOfModes
 			{
 				if ((funcAfterFFT[i - 2] > funcAfterFFT[i - 1] && funcAfterFFT[i] > funcAfterFFT[i - 1])
 					|| (funcAfterFFT[i - 2] < funcAfterFFT[i - 1] && funcAfterFFT[i] < funcAfterFFT[i - 1])) extremumCounter++;
-			} // Äîáàâèòü ìåäèàííîå ñðåäíåêâàäðàòè÷íîå îòêëîíåíèå âìåñòî ÷èñëà ýêñòðåìóìîâ äëÿ îïðåäåëåíèÿ õàîñà è îïðåäåëåíèå êâàçèïåðèîäè÷åñêèõ çîí.
+			} // Ð”Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ Ð¼ÐµÐ´Ð¸Ð°Ð½Ð½Ð¾Ðµ ÑÑ€ÐµÐ´Ð½ÐµÐºÐ²Ð°Ð´Ñ€Ð°Ñ‚Ð¸Ñ‡Ð½Ð¾Ðµ Ð¾Ñ‚ÐºÐ»Ð¾Ð½ÐµÐ½Ð¸Ðµ Ð²Ð¼ÐµÑÑ‚Ð¾ Ñ‡Ð¸ÑÐ»Ð° ÑÐºÑÑ‚Ñ€ÐµÐ¼ÑƒÐ¼Ð¾Ð² Ð´Ð»Ñ Ð¾Ð¿Ñ€ÐµÐ´ÐµÐ»ÐµÐ½Ð¸Ñ Ñ…Ð°Ð¾ÑÐ° Ð¸ Ð¾Ð¿Ñ€ÐµÐ´ÐµÐ»ÐµÐ½Ð¸Ðµ ÐºÐ²Ð°Ð·Ð¸Ð¿ÐµÑ€Ð¸Ð¾Ð´Ð¸Ñ‡ÐµÑÐºÐ¸Ñ… Ð·Ð¾Ð½.
 			if (extremumCounter * 4 > funcAfterFFT.Length) return Regime.Chaos;
 			return Regime.SomethingUnknown;
 		}

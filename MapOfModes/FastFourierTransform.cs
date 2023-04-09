@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +12,7 @@ namespace MapOfModes
 	{
 		public static double[] GetFFT(double[] originalFunction)
 		{
-			int nPoints = 524288; // 2^19. nPoints желательно быть степенью двойки для ускорения работы FFT.
+			int nPoints = 524288; // 2^19. nPoints Р¶РµР»Р°С‚РµР»СЊРЅРѕ Р±С‹С‚СЊ СЃС‚РµРїРµРЅСЊСЋ РґРІРѕР№РєРё РґР»СЏ СѓСЃРєРѕСЂРµРЅРёСЏ СЂР°Р±РѕС‚С‹ FFT.
 
 			double[] origCut = originalFunction
 				.Take(nPoints)
