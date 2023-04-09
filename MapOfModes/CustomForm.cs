@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
@@ -24,27 +24,27 @@ namespace MapOfModes
 
 			this.openSettings = new ToolStripMenuItem
 			{
-				Text = "Настройки"
+				Text = "РќР°СЃС‚СЂРѕР№РєРё"
 			};
 
 			this.pause = new ToolStripMenuItem
 			{
-				Text = "Поставить паузу"
+				Text = "РџРѕСЃС‚Р°РІРёС‚СЊ РїР°СѓР·Сѓ"
 			};
 			pause.Click += (sender, args) =>
 			{
-				if (pause.Text == "Поставить паузу") pause.Text = "Снять с паузы";
-				else pause.Text = "Поставить паузу";
+				if (pause.Text == "РџРѕСЃС‚Р°РІРёС‚СЊ РїР°СѓР·Сѓ") pause.Text = "РЎРЅСЏС‚СЊ СЃ РїР°СѓР·С‹";
+				else pause.Text = "РџРѕСЃС‚Р°РІРёС‚СЊ РїР°СѓР·Сѓ";
 			};
 
 			this.save = new ToolStripMenuItem
 			{
-				Text = "Сохранить карту",
+				Text = "РЎРѕС…СЂР°РЅРёС‚СЊ РєР°СЂС‚Сѓ",
 			};
 
 			this.read = new ToolStripMenuItem
 			{
-				Text = "Открыть карту",
+				Text = "РћС‚РєСЂС‹С‚СЊ РєР°СЂС‚Сѓ",
 			};
 
 			menu.Items.Add(openSettings);

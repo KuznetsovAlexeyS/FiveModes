@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
@@ -33,7 +33,7 @@ namespace MapOfModes
 
 		public SettingForm()
 		{
-			this.Text = "Настройки";
+			this.Text = "РќР°СЃС‚СЂРѕР№РєРё";
 			this.Width = 500;
 			this.Height = 300;
 			this.ControlBox = false;
@@ -48,7 +48,7 @@ namespace MapOfModes
 			Label PrLabel = new Label
 			{
 				Location = new Point(10, 25),
-				Text = "Число Прандтля Pr",
+				Text = "Р§РёСЃР»Рѕ РџСЂР°РЅРґС‚Р»СЏ Pr",
 			};
 
 			this.eStart = new TextBox
@@ -60,7 +60,7 @@ namespace MapOfModes
 			Label eLabel = new Label
 			{
 				Location = new Point(10, 65),
-				Text = "Электрическое число Рэлея e",
+				Text = "Р­Р»РµРєС‚СЂРёС‡РµСЃРєРѕРµ С‡РёСЃР»Рѕ Р СЌР»РµСЏ e",
 				Visible = true,
 			};
 
@@ -73,7 +73,7 @@ namespace MapOfModes
 			Label rLabel = new Label
 			{
 				Location = new Point(10, 100),
-				Text = "Тепловое число Рэлея r",
+				Text = "РўРµРїР»РѕРІРѕРµ С‡РёСЃР»Рѕ Р СЌР»РµСЏ r",
 				Visible = true,
 			};
 
@@ -87,7 +87,7 @@ namespace MapOfModes
 			{
 				Location = new Point(10, 135),
 				Size = new Size(50, 10),
-				Text = "Частота nu",
+				Text = "Р§Р°СЃС‚РѕС‚Р° nu",
 			};
 
 			this.kStart = new TextBox
@@ -99,14 +99,14 @@ namespace MapOfModes
 			Label kLabel = new Label
 			{
 				Location = new Point(10, 167),
-				Text = "Волновое число k",
+				Text = "Р’РѕР»РЅРѕРІРѕРµ С‡РёСЃР»Рѕ k",
 			};
 
 			this.cancel = new Button
 			{
 				Location = new Point(10, 225),
 				Size = new Size(70, 30),
-				Text = "Отмена",
+				Text = "РћС‚РјРµРЅР°",
 				FlatStyle = FlatStyle.Flat,
 			};
 			cancel.Click += (sender, args) => this.Hide();
@@ -115,7 +115,7 @@ namespace MapOfModes
 			{
 				Location = new Point(90, 220),
 				Size = new Size(90, 40),
-				Text = "Принять и начать расчёт",
+				Text = "РџСЂРёРЅСЏС‚СЊ Рё РЅР°С‡Р°С‚СЊ СЂР°СЃС‡С‘С‚",
 				FlatStyle = FlatStyle.Flat,
 			};
 
@@ -138,7 +138,7 @@ namespace MapOfModes
 			{
 				Location = new Point(415, 5),
 				Size = new Size(50, 30),
-				Text = "Мода",
+				Text = "РњРѕРґР°",
 
 			};
 
@@ -153,7 +153,7 @@ namespace MapOfModes
 			{
 				Location = new Point(205, 5),
 				Size = new Size(95, 30),
-				Text = "Горизонтальный параметр",
+				Text = "Р“РѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅС‹Р№ РїР°СЂР°РјРµС‚СЂ",
 			};
 
 			this.verticalParameter = new ComboBox
@@ -167,7 +167,7 @@ namespace MapOfModes
 			{
 				Location = new Point(305, 5),
 				Size = new Size(120, 30),
-				Text = "Вертикальный параметр",
+				Text = "Р’РµСЂС‚РёРєР°Р»СЊРЅС‹Р№ РїР°СЂР°РјРµС‚СЂ",
 			};
 
 			this.horizontalValueStart = new TextBox
@@ -180,7 +180,7 @@ namespace MapOfModes
 			{
 				Location = new Point(205, 65),
 				Size = new Size(70, 40),
-				Text = "Начальное значение по горизонтали"
+				Text = "РќР°С‡Р°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РїРѕ РіРѕСЂРёР·РѕРЅС‚Р°Р»Рё"
 			};
 
 			this.horizontalValueStep = new TextBox
@@ -193,7 +193,7 @@ namespace MapOfModes
 			{
 				Location = new Point(205, 135),
 				Size = new Size(70, 25),
-				Text = "шаг по горизонтали"
+				Text = "С€Р°Рі РїРѕ РіРѕСЂРёР·РѕРЅС‚Р°Р»Рё"
 			};
 
 			this.horizontalValueEnd = new TextBox
@@ -206,7 +206,7 @@ namespace MapOfModes
 			{
 				Location = new Point(205, 190),
 				Size = new Size(70, 35),
-				Text = "конечное значение по горизонтали", // по горизонтали
+				Text = "РєРѕРЅРµС‡РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РїРѕ РіРѕСЂРёР·РѕРЅС‚Р°Р»Рё", // РїРѕ РіРѕСЂРёР·РѕРЅС‚Р°Р»Рё
 			};
 
 			this.verticalValueStart = new TextBox
@@ -219,7 +219,7 @@ namespace MapOfModes
 			{
 				Location = new Point(305, 65),
 				Size = new Size(70, 40),
-				Text = "Начальное значение по вертикали",
+				Text = "РќР°С‡Р°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РїРѕ РІРµСЂС‚РёРєР°Р»Рё",
 			};
 			this.verticalValueStep = new TextBox
 			{
@@ -231,7 +231,7 @@ namespace MapOfModes
 			{
 				Location = new Point(305, 135),
 				Size = new Size(70, 25),
-				Text = "шаг по вертикали"
+				Text = "С€Р°Рі РїРѕ РІРµСЂС‚РёРєР°Р»Рё"
 			};
 
 			this.verticalValueEnd = new TextBox
@@ -244,7 +244,7 @@ namespace MapOfModes
 			{
 				Location = new Point(305, 190),
 				Size = new Size(70, 35),
-				Text = "конечное значение по вертикали", // по вертикали
+				Text = "РєРѕРЅРµС‡РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РїРѕ РІРµСЂС‚РёРєР°Р»Рё", // РїРѕ РІРµСЂС‚РёРєР°Р»Рё
 			};
 
 
@@ -252,7 +252,7 @@ namespace MapOfModes
 			{
 				Location = new Point(393, 55),
 				Size = new Size(80, 30),
-				Text = "Cтартовые значения мод",
+				Text = "CС‚Р°СЂС‚РѕРІС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РјРѕРґ",
 			};
 
 			this.startModeX = new TextBox
@@ -320,7 +320,7 @@ namespace MapOfModes
 			{
 				Location = new Point (385, 220),
 				Size = new Size(100, 40),
-				Text = "Продолжение по параметру",
+				Text = "РџСЂРѕРґРѕР»Р¶РµРЅРёРµ РїРѕ РїР°СЂР°РјРµС‚СЂСѓ",
 			};
 
 			mode.Items.AddRange(new string[] { "X", "Y", "Z", "V", "W" });
